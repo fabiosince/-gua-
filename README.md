@@ -28,4 +28,4 @@ A V2.1 mantém a mesma chave de armazenamento da V2 (`agua_condominio_v2_data`) 
 - O valor informado é usado no cálculo do consumo mensal e é carregado automaticamente como referência nos meses seguintes quando houver leitura registrada.
 
 
-V2.1.5: tela para cadastro em massa das leituras de referência do mês anterior, preservando o histórico mensal e preenchendo automaticamente a leitura anterior no cadastro das unidades.
+V2.1.6: tela para cadastro em massa das leituras de referência do mês anterior, preservando o histórico mensal e preenchendo automaticamente a leitura anterior no cadastro das unidades.

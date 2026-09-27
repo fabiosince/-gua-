@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0b5cab">
 <link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="styles.css">
-<title>Leitura de Água • Condomínio V2.1.5</title>
+<title>Leitura de Água • Condomínio V2.1.6</title>
 </head>
 <body>
 <header class="topbar">
@@ -42,7 +42,7 @@
   <div class="panel unit-panel">
     <div class="panel-head-row">
       <div>
-        <div class="panel-title">Painel das unidades • V2.1.4</div>
+        <div class="panel-title">Painel das unidades • V2.1.6</div>
         <div class="muted">Toque em uma unidade para registrar ou editar a leitura.</div>
       </div>
       <div class="panel-progress"><b id="panelDone">0/81</b><span>feitas</span></div>
@@ -61,7 +61,7 @@
       <button class="secondary" onclick="showScreen('history')">📚 Histórico</button>
       <button class="secondary" onclick="showScreen('alerts')">⚠️ Alertas</button>
       <button class="secondary" onclick="showScreen('reports')">📊 Relatórios</button>
-      <button class="secondary" onclick="showScreen('references')">🗓️ Cadastrar mês anterior</button>
+      <button id="openReferencesBtn" class="primary" type="button">🗓️ Cadastrar mês anterior</button>
     </div>
   </div>
 </section>
