@@ -49,3 +49,7 @@
 /* V2.19 — busca rápida no painel */
 .quick-unit-search{display:flex;gap:8px;margin-bottom:12px;align-items:center}.quick-unit-search .search{flex:1;margin:0}.quick-unit-search .secondary{white-space:nowrap}
 @media(max-width:520px){.quick-unit-search{align-items:stretch}.quick-unit-search .secondary{padding-left:12px;padding-right:12px}}
+
+/* V2.20 — interface mais intuitiva */
+.brand-line{display:flex;align-items:center;gap:10px}.brand-drop{width:42px;height:42px;display:grid;place-items:center;border-radius:13px;background:#eaf4ff;font-size:25px}.topbar h1{margin:0}.hero-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.hero-next{border:1px solid rgba(255,255,255,.45);background:rgba(255,255,255,.16);color:#fff;border-radius:12px;padding:11px 14px;font:inherit;font-weight:800;cursor:pointer}.filter-chips{display:flex;gap:7px;flex-wrap:wrap}.filter-chip{border:1px solid #d9e1ea;background:#fff;color:#526173;border-radius:999px;padding:9px 12px;font:inherit;font-size:12px;font-weight:800;cursor:pointer}.filter-chip.active{background:#0b5cab;color:#fff;border-color:#0b5cab}.unit-list .unit{align-items:center}.bottom-nav button{min-width:0}.bottom-nav{grid-template-columns:repeat(5,1fr)}
+@media(max-width:520px){.hero-actions{display:grid;grid-template-columns:1fr}.hero-actions button{width:100%}.filter-chips{overflow-x:auto;flex-wrap:nowrap;padding-bottom:2px}.filter-chip{white-space:nowrap}.brand-drop{width:38px;height:38px}.bottom-nav button{font-size:11px}}

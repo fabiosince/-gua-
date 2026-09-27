@@ -32,6 +32,8 @@ function toggleClosure(){
 }
 
 function periodLabel(p){const [y,m]=p.split('-');return new Date(Number(y),Number(m)-1,1).toLocaleDateString('pt-BR',{month:'long',year:'numeric'})}
+function setUnitFilter(value){$('filter').value=value;document.querySelectorAll('.filter-chip').forEach(b=>b.classList.toggle('active',b.dataset.filter===value));renderUnits();}
+function openNextPending(){const q=(document.getElementById('search')?.value||'').trim();if(q)document.getElementById('search').value='';const u=allUnits().find(x=>!currentReading(x.id));if(!u)return toast('Todas as unidades deste mês já possuem leitura.');openModal(u.id);}
 function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id===id));document.querySelectorAll('.bottom-nav button').forEach(b=>b.classList.toggle('active',b.dataset.screen===id));if(id==='dashboard')renderUnitPanel();if(id==='readings')renderUnits();if(id==='history')renderHistory();if(id==='reports')renderReports();if(id==='alerts')renderAlerts();if(id==='references')renderReferences();window.scrollTo({top:0,behavior:'smooth'})}
 function unitObj(id){return {id,number:id,type:id==='PRINCIPAL'?'principal':'residencial',meter:state.meters?.[id]||''}}
 function currentReading(id,period=selectedPeriod){return state.readings.find(r=>r.unitId===id&&r.period===period)}

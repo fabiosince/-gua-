@@ -6,11 +6,11 @@
 <meta name="theme-color" content="#0b5cab">
 <link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="styles.css">
-<title>Leitura de Água • Condomínio V2.19</title>
+<title>Tangará Residencial • Controle de Água V2.20</title>
 </head>
 <body>
 <header class="topbar">
-  <div><div class="eyebrow">CONTROLE DE CONSUMO</div><h1>💧 Leitura de Água</h1><small>Condomínio Tangará Residencial • V2.19</small></div>
+  <div><div class="brand-line"><span class="brand-drop">💧</span><div><div class="eyebrow">TANGARÁ RESIDENCIAL</div><h1>Controle de Água</h1><small>Leituras • Consumo • Conferência</small></div></div></div>
   <button id="menuBtn" class="icon-btn" aria-label="Menu">☰</button>
 </header>
 
@@ -18,7 +18,7 @@
 <section id="dashboard" class="screen active">
   <div class="hero">
     <div><span>Período de leitura</span><strong id="period"></strong></div>
-    <button class="primary light" onclick="showScreen('readings')">Iniciar leituras</button>
+    <div class="hero-actions"><button class="primary light" onclick="showScreen('readings')">▶ Começar leituras</button><button class="hero-next" onclick="openNextPending()">→ Próxima pendente</button></div>
   </div>
   <div class="period-control panel">
     <button class="secondary" onclick="shiftPeriod(-1)">‹</button>
@@ -43,7 +43,7 @@
     <div class="quick-unit-search"><input id="dashboardUnitSearch" class="search" placeholder="🔎 Buscar unidade no painel (ex.: 24, 108 ou PRINCIPAL)" oninput="renderUnitPanel()"><button class="secondary" type="button" onclick="clearDashboardUnitSearch()">Limpar</button></div>
     <div class="panel-head-row">
       <div>
-        <div class="panel-title">Painel das unidades • V2.19</div>
+        <div class="panel-title">Unidades • toque para registrar</div>
         <div class="muted">Toque em uma unidade para registrar ou editar a leitura.</div>
       </div>
       <div class="panel-progress"><b id="panelDone">0/81</b><span>feitas</span></div>
@@ -58,10 +58,10 @@
   <div class="panel">
     <div class="panel-title">Ações rápidas</div>
     <div class="actions">
-      <button class="secondary" onclick="showScreen('readings')">📋 Lista de unidades</button>
-      <button class="secondary" onclick="showScreen('history')">📚 Histórico</button>
-      <button class="secondary" onclick="showScreen('alerts')">⚠️ Alertas</button>
-      <button class="secondary" onclick="showScreen('reports')">📊 Relatórios</button>
+      <button class="secondary" onclick="showScreen('readings')">📋 Todas as unidades</button>
+      <button class="secondary" onclick="showScreen('history')">📚 Histórico por unidade</button>
+      <button class="secondary" onclick="showScreen('alerts')">⚠️ Ver alertas</button>
+      <button class="secondary" onclick="showScreen('reports')">📊 Fechamento e relatório</button>
       <button id="openReferencesBtn" class="primary" type="button">🗓️ Cadastrar mês anterior</button>
     </div>
   </div>
@@ -70,8 +70,14 @@
 <section id="readings" class="screen">
   <div class="section-head"><div><div class="eyebrow">81 MEDIDORES</div><h2>Leituras</h2></div><button class="secondary" onclick="showScreen('dashboard')">Início</button></div>
   <div class="filters">
-    <input id="search" class="search" placeholder="🔎 Buscar unidade ou hidrômetro" oninput="renderUnits()">
-    <select id="filter" onchange="renderUnits()"><option value="all">Todas</option><option value="pending">Pendentes</option><option value="done">Normais</option><option value="warning">Alerta médio</option><option value="critical">Alerta crítico</option><option value="alert">Alertas</option></select>
+    <input id="search" class="search" placeholder="🔎 Digite unidade ou hidrômetro" oninput="renderUnits()">
+    <div class="filter-chips" role="group" aria-label="Filtrar unidades">
+      <button type="button" class="filter-chip active" data-filter="all" onclick="setUnitFilter('all')">Todas</button>
+      <button type="button" class="filter-chip" data-filter="pending" onclick="setUnitFilter('pending')">Pendentes</button>
+      <button type="button" class="filter-chip" data-filter="done" onclick="setUnitFilter('done')">Concluídas</button>
+      <button type="button" class="filter-chip" data-filter="alert" onclick="setUnitFilter('alert')">⚠ Alertas</button>
+    </div>
+    <select id="filter" onchange="renderUnits()" hidden><option value="all">Todas</option><option value="pending">Pendentes</option><option value="done">Normais</option><option value="warning">Alerta médio</option><option value="critical">Alerta crítico</option><option value="alert">Alertas</option></select>
   </div>
   <div id="unitList" class="unit-list"></div>
 </section>
@@ -141,6 +147,7 @@
 <button data-screen="readings" onclick="showScreen('readings')">▣<span>Leituras</span></button>
 <button data-screen="history" onclick="showScreen('history')">◷<span>Histórico</span></button>
 <button data-screen="reports" onclick="showScreen('reports')">▤<span>Relatórios</span></button>
+<button data-screen="alerts" onclick="showScreen('alerts')">⚠<span>Alertas</span></button>
 </nav>
 
 <div id="modal" class="modal">
