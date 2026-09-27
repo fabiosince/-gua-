@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b5cab">
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="styles.css">
+<title>Água • Condomínio</title>
+</head>
+<body>
+<header class="topbar">
+  <div>
+    <div class="eyebrow">CONTROLE DE CONSUMO</div>
+    <h1>💧 Água do Condomínio</h1>
+  </div>
+  <button id="installBtn" class="icon-btn" hidden>＋</button>
+</header>
+
+<main>
+  <section id="dashboard" class="screen active">
+    <div class="hero">
+      <div><span class="muted">Período</span><strong id="periodLabel"></strong></div>
+      <button class="primary" onclick="showScreen('leituras')">Iniciar leituras</button>
+    </div>
+    <div class="cards">
+      <div class="card"><span>Unidades</span><b>80</b><small>+ principal</small></div>
+      <div class="card"><span>Realizadas</span><b id="doneCount">0</b><small id="donePct">0%</small></div>
+      <div class="card"><span>Pendentes</span><b id="pendingCount">81</b><small>neste período</small></div>
+      <div class="card"><span>Alertas</span><b id="alertCount">0</b><small>revisar</small></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Resumo do consumo</div>
+      <div class="summary-grid">
+        <div><span>Residencial</span><strong id="totalResidential">0,00 m³</strong></div>
+        <div><span>Principal</span><strong id="mainConsumption">0,00 m³</strong></div>
+        <div><span>Diferença</span><strong id="difference">0,00 m³</strong></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Ações rápidas</div>
+      <div class="quick-grid">
+        <button onclick="showScreen('leituras')">📋<span>Leituras</span></button>
+        <button onclick="showScreen('alertas')">⚠️<span>Alertas</span></button>
+        <button onclick="showScreen('relatorios')">📊<span>Relatórios</span></button>
+        <button onclick="exportCSV()">⬇️<span>Exportar CSV</span></button>
+      </div>
+    </div>
+  </section>
+
+  <section id="leituras" class="screen">
+    <div class="section-head">
+      <div><span class="muted">81 medidores</span><h2>Leituras</h2></div>
+      <button class="secondary" onclick="showScreen('dashboard')">Início</button>
+    </div>
+    <input id="search" class="search" placeholder="🔎 Pesquisar unidade, responsável ou hidrômetro..." oninput="renderUnits()">
+    <div id="unitList" class="unit-list"></div>
+  </section>
+
+  <section id="alertas" class="screen">
+    <div class="section-head"><div><span class="muted">Consumo e ocorrências</span><h2>Alertas</h2></div><button class="secondary" onclick="showScreen('dashboard')">Início</button></div>
+    <div id="alertsList"></div>
+  </section>
+
+  <section id="relatorios" class="screen">
+    <div class="section-head"><div><span class="muted">Dados do período</span><h2>Relatórios</h2></div><button class="secondary" onclick="showScreen('dashboard')">Início</button></div>
+    <div class="panel">
+      <h3>Relatório mensal</h3>
+      <p class="muted">Exporte as 80 unidades e o medidor principal com leitura anterior, atual, consumo e situação.</p>
+      <div class="report-actions">
+        <button class="primary" onclick="exportCSV()">Baixar CSV</button>
+        <button class="secondary" onclick="window.print()">Imprimir / PDF</button>
+        <button class="secondary" onclick="backupJSON()">Backup dos dados</button>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Como usar</h3>
+      <ol>
+        <li>Selecione uma unidade.</li><li>Informe a leitura atual.</li><li>Opcionalmente fotografe o hidrômetro.</li><li>Confirme e avance para a próxima unidade.</li>
+      </ol>
+    </div>
+  </section>
+</main>
+
+<nav class="bottom-nav">
+  <button class="nav active" data-screen="dashboard" onclick="showScreen('dashboard')">⌂<span>Início</span></button>
+  <button class="nav" data-screen="leituras" onclick="showScreen('leituras')">▣<span>Leituras</span></button>
+  <button class="nav" data-screen="alertas" onclick="showScreen('alertas')">⚠<span>Alertas</span></button>
+  <button class="nav" data-screen="relatorios" onclick="showScreen('relatorios')">▤<span>Relatórios</span></button>
+</nav>
+
+<div id="modal" class="modal" aria-hidden="true">
+  <div class="modal-card">
+    <div class="modal-head"><div><span class="muted" id="modalType"></span><h2 id="modalTitle"></h2></div><button onclick="closeModal()">✕</button></div>
+    <div class="form-grid">
+      <label>Data da leitura<input id="readDate" type="date"></label>
+      <label>Leitura anterior (m³)<input id="prevRead" type="number" step="0.01" readonly></label>
+      <label>Leitura atual (m³)<input id="currentRead" type="number" step="0.01" min="0"></label>
+      <label>Hidrômetro<input id="meterId" type="text" placeholder="Ex.: H-011"></label>
+      <label>Foto do hidrômetro<input id="photo" type="file" accept="image/*" capture="environment"></label>
+      <label>Observações<textarea id="notes" rows="3"></textarea></label>
+    </div>
+    <div id="photoPreview" class="photo-preview"></div>
+    <div id="validation" class="validation"></div>
+    <button class="primary wide" onclick="saveReading()">Salvar leitura</button>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+<script src="app.js"></script>
+</body>
+</html>
