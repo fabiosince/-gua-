@@ -1,6 +1,6 @@
-# Tangará Residencial — Controle de Água V2.22
+# Tangará Residencial — Controle de Água V2.23
 
-V2.22 prioriza uma leitura rápida e intuitiva no celular.
+V2.23 prioriza uma leitura rápida e intuitiva no celular.
 
 - Campo da leitura atual em destaque
 - Botões rápidos para pequenos ajustes
