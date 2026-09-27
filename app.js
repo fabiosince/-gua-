@@ -83,7 +83,9 @@ function openReferences(){showScreen('references');renderReferences();}
 
 $('referenceSaveBtn').addEventListener('click',saveReferences);$('referenceFillBtn').addEventListener('click',fillReferencesFromPreviousMonth);$('openReferencesBtn').addEventListener('click',openReferences);$('restore').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const data=JSON.parse(rd.result);if(!Array.isArray(data.readings))throw Error();state=data;saveState();updateDashboard();renderUnitPanel();renderUnits();renderAlerts();renderReports();toast('Backup restaurado.')}catch(x){toast('Arquivo de backup inválido.')}};rd.readAsText(f)});
 function clearAll(){if(confirm('Apagar TODAS as leituras e referências deste aparelho? Esta ação não pode ser desfeita.')){localStorage.removeItem(KEY);state={readings:[],references:{},closures:{}};updateDashboard();renderUnitPanel();renderUnits();renderAlerts();renderReports();toast('Dados apagados.')}}
-function exportReport(){const format=$('exportFormat')?.value||'pdf';if(format==='csv'){exportCSV();return}printReport()}
+let selectedExportFormat='pdf';
+function selectExportFormat(format){selectedExportFormat=format;document.querySelectorAll('.export-format').forEach(b=>b.classList.toggle('selected',b.dataset.format===format));const btn=document.querySelector('.export-main-btn');if(btn)btn.textContent=format==='csv'?'⬇️ Exportar relatório em CSV':'⬇️ Exportar relatório em PDF'}
+function exportReport(){if(selectedExportFormat==='csv'){exportCSV();return}printReport()}
 function printReport(){showScreen('reports');setTimeout(()=>{window.print();toast('Relatório preparado para salvar como PDF.')},100)}
 function toast(t){const el=$('toast');el.textContent=t;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2300)}
 $('periodPicker').value=selectedPeriod;$('period').textContent=periodLabel(selectedPeriod);renderReferences();updateDashboard();renderUnitPanel();renderUnits();renderAlerts();renderReports();

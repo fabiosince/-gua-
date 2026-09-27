@@ -6,11 +6,11 @@
 <meta name="theme-color" content="#0b5cab">
 <link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="styles.css">
-<title>Leitura de Água • Condomínio V2.12</title>
+<title>Leitura de Água • Condomínio V2.13</title>
 </head>
 <body>
 <header class="topbar">
-  <div><div class="eyebrow">CONTROLE DE CONSUMO</div><h1>💧 Leitura de Água</h1><small>Condomínio Tangará Residencial • V2.12</small></div>
+  <div><div class="eyebrow">CONTROLE DE CONSUMO</div><h1>💧 Leitura de Água</h1><small>Condomínio Tangará Residencial • V2.13</small></div>
   <button id="menuBtn" class="icon-btn" aria-label="Menu">☰</button>
 </header>
 
@@ -42,7 +42,7 @@
   <div class="panel unit-panel">
     <div class="panel-head-row">
       <div>
-        <div class="panel-title">Painel das unidades • V2.12</div>
+        <div class="panel-title">Painel das unidades • V2.13</div>
         <div class="muted">Toque em uma unidade para registrar ou editar a leitura.</div>
       </div>
       <div class="panel-progress"><b id="panelDone">0/81</b><span>feitas</span></div>
@@ -111,13 +111,11 @@
     <div class="export-box">
       <div class="panel-title">Exportar relatório</div>
       <p class="muted">Escolha o formato do arquivo que deseja gerar.</p>
-      <div class="export-choice">
-        <select id="exportFormat" aria-label="Formato de exportação">
-          <option value="pdf">📄 PDF</option>
-          <option value="csv">📊 CSV</option>
-        </select>
-        <button class="primary" onclick="exportReport()">⬇️ Exportar arquivo</button>
+      <div class="export-choice export-choice-v213" role="group" aria-label="Escolha o formato do relatório">
+        <button type="button" class="export-format selected" data-format="pdf" onclick="selectExportFormat('pdf')">📄<span>PDF</span><small>Relatório para impressão</small></button>
+        <button type="button" class="export-format" data-format="csv" onclick="selectExportFormat('csv')">📊<span>CSV</span><small>Arquivo para Excel</small></button>
       </div>
+      <button class="primary export-main-btn" onclick="exportReport()">⬇️ Exportar relatório em PDF</button>
     </div>
     <button class="secondary" onclick="showScreen('history')">📚 Histórico detalhado</button>
     <button class="secondary" onclick="backupJSON()">💾 Fazer backup</button>
