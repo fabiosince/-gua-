@@ -70,7 +70,7 @@
   <div class="section-head"><div><div class="eyebrow">81 MEDIDORES</div><h2>Leituras</h2></div><button class="secondary" onclick="showScreen('dashboard')">Início</button></div>
   <div class="filters">
     <input id="search" class="search" placeholder="🔎 Buscar unidade ou hidrômetro" oninput="renderUnits()">
-    <select id="filter" onchange="renderUnits()"><option value="all">Todas</option><option value="pending">Pendentes</option><option value="done">Normais</option><option value="warning">Suspeitas</option><option value="critical">Acima do normal</option><option value="alert">Alertas</option></select>
+    <select id="filter" onchange="renderUnits()"><option value="all">Todas</option><option value="pending">Pendentes</option><option value="done">Normais</option><option value="warning">Alerta médio</option><option value="critical">Alerta crítico</option><option value="alert">Alertas</option></select>
   </div>
   <div id="unitList" class="unit-list"></div>
 </section>
@@ -104,9 +104,9 @@
   <div class="section-head"><div><div class="eyebrow">GESTÃO</div><h2>Relatório de leituras</h2></div><button class="secondary" onclick="showScreen('dashboard')">Início</button></div>
   <div class="panel report-cover">
     <div class="eyebrow">RELATÓRIO MENSAL</div><h2>Leituras e consumo</h2><p class="muted">Período: <span id="reportPeriod"></span></p>
-    <div class="report-grid"><div>Leituras <b id="rDone">0/81</b></div><div>Consumo residencial <b id="rRes">0,00 m³</b></div><div>Consumo elevado <b id="rAlerts">0</b></div><div>Possível vazamento <b id="rCritical">0</b></div></div>
+    <div class="report-grid"><div>Leituras <b id="rDone">0/81</b></div><div>Consumo residencial <b id="rRes">0,00 m³</b></div><div>Alertas de consumo <b id="rAlerts">0</b></div><div>Alertas críticos <b id="rCritical">0</b></div></div>
   </div>
-  <div class="panel"><h3>Lista de unidades</h3><p class="muted">O consumo é calculado pela diferença entre a leitura atual e a leitura anterior. A classificação compara o consumo com até os 3 períodos anteriores da própria unidade.</p><div class="risk-table-wrap"><table class="risk-table"><thead><tr><th>Variação sobre a média histórica</th><th>Classificação</th><th>Indicação</th></tr></thead><tbody><tr><td>Até 10%</td><td><span class="status ok">NORMAL</span></td><td>Oscilação dentro do padrão</td></tr><tr><td>Acima de 10% até menos de 40%</td><td><span class="status warning">SUSPEITA</span></td><td>Atenção e verificação pela administração</td></tr><tr><td>40% ou mais</td><td><span class="status alert">ACIMA DO NORMAL</span></td><td>Verificação prioritária; possível consumo excessivo ou vazamento</td></tr></tbody></table></div><div id="reportWarning"></div><div id="reportTable" class="monthly-table-wrap"></div></div>
+  <div class="panel"><h3>Critério de consumo</h3><p class="muted">O consumo é calculado pela diferença entre a leitura atual e a leitura anterior.</p><div class="risk-table-wrap"><table class="risk-table"><thead><tr><th>Consumo no mês</th><th>Classificação</th><th>Indicação</th></tr></thead><tbody><tr><td>Até 25 m³</td><td><span class="status ok">NORMAL</span></td><td>Sem alerta de consumo excessivo.</td></tr><tr><td>Acima de 25 m³ até 50 m³</td><td><span class="status warning">ALERTA MÉDIO</span></td><td>Recomenda-se verificar a unidade.</td></tr><tr><td>Acima de 50 m³</td><td><span class="status alert">ALERTA CRÍTICO</span></td><td>Verificação prioritária para possível consumo excessivo ou vazamento.</td></tr></tbody></table></div><div id="reportWarning"></div><div id="reportTable" class="monthly-table-wrap"></div></div>
   <div class="panel actions">
     <button class="primary" onclick="exportCSV()">⬇️ Exportar relatório CSV</button>
     <button class="secondary" onclick="printReport()">🖨️ Imprimir / PDF</button>
