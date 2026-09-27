@@ -102,8 +102,10 @@
 
 <section id="reports" class="screen">
   <div class="section-head"><div><div class="eyebrow">GESTÃO</div><h2>Relatórios</h2></div><button class="secondary" onclick="showScreen('dashboard')">Início</button></div>
-  <div class="panel">
-    <h3>Fechamento — <span id="reportPeriod"></span></h3><div class="closure-row"><span>Status do mês</span><b id="reportStatus" class="closure-status open">ABERTO</b><button id="closureBtn" class="primary" onclick="toggleClosure()">🔒 Fechar mês</button></div>
+  <div class="panel report-cover">
+    <div class="eyebrow">RELATÓRIO MENSAL</div><h2>Controle de Consumo de Água</h2><p class="muted">Condomínio • <span id="reportPeriod"></span></p>
+    <div class="report-cover-line"></div>
+    <h3>Fechamento — <span id="reportPeriod2"></span></h3><div class="closure-row"><span>Status do mês</span><b id="reportStatus" class="closure-status open">ABERTO</b><button id="closureBtn" class="primary" onclick="toggleClosure()">🔒 Fechar mês</button></div>
     <div class="report-grid"><div>Leituras <b id="rDone">0</b></div><div>Consumo residencial <b id="rRes">0,00 m³</b></div><div>Principal <b id="rMain">0,00 m³</b></div><div>Alertas <b id="rAlerts">0</b></div></div>
   </div>
   <div class="panel">
@@ -116,6 +118,7 @@
   <div class="panel actions">
     <button class="primary" onclick="exportCSV()">⬇️ Exportar CSV</button>
     <button class="secondary" onclick="printReport()">🖨️ Imprimir / PDF</button>
+    <button class="secondary" onclick="showScreen('history')">📚 Histórico detalhado</button>
     <button class="secondary" onclick="backupJSON()">💾 Fazer backup</button>
     <button class="secondary" onclick="document.getElementById('restore').click()">♻️ Restaurar backup</button>
     <input id="restore" type="file" accept=".json,application/json" hidden>

@@ -1,4 +1,4 @@
-# Água Condomínio — V2.3
+# Água Condomínio — V2.4
 
 Aplicativo PWA para leitura de 80 hidrômetros residenciais + 1 medidor principal.
 
@@ -30,7 +30,7 @@ A V2.1 mantém a mesma chave de armazenamento da V2 (`agua_condominio_v2_data`) 
 
 V2.1.7: tela para cadastro em massa das leituras de referência do mês anterior, preservando o histórico mensal e preenchendo automaticamente a leitura anterior no cadastro das unidades.
 
-## V2.3
+## V2.4
 - Fechamento mensal explícito por período.
 - Status ABERTO/FECHADO no relatório.
 - Fechamento pode ser reaberto para correções.
@@ -38,4 +38,7 @@ V2.1.7: tela para cadastro em massa das leituras de referência do mês anterior
 - Mantida a compatibilidade com os dados locais existentes.
 
 
-V2.3: adicionada evolução mensal dos últimos 6 períodos no relatório, com leituras, consumo residencial, principal, diferença, percentual e status de fechamento.
+V2.4: adicionada evolução mensal dos últimos 6 períodos no relatório, com leituras, consumo residencial, principal, diferença, percentual e status de fechamento.
+
+
+V2.4 acrescenta capa de relatório mensal, identificação do período e impressão/PDF com layout otimizado.
