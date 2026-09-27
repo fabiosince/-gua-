@@ -1,24 +1,22 @@
-# Água Condomínio — V2 sem login
+# Água Condomínio — V2.1
 
-Aplicativo PWA para registrar leituras dos hidrômetros das 80 unidades (11–18, 21–28, ... 101–108) e da Unidade Principal.
+Aplicativo PWA para leitura de 80 hidrômetros residenciais + 1 medidor principal.
 
-## Características
-- acesso direto, sem login;
-- 81 medidores cadastrados;
-- leitura anterior e atual;
-- cálculo automático em m³;
-- foto do hidrômetro;
-- OCR experimental para sugerir a leitura;
-- histórico;
-- alertas de leitura inconsistente;
-- relatórios;
-- CSV, impressão/PDF;
-- backup e restauração;
-- funcionamento offline após o primeiro carregamento;
-- dados gravados no aparelho via localStorage.
+## V2.1
+- Sem login.
+- Seleção e navegação por mês de referência.
+- Fechamento mensal.
+- Gráfico de consumo residencial por unidade.
+- Controle da diferença entre medidor principal e soma das unidades.
+- Percentual da diferença em relação ao principal.
+- Alertas automáticos: leitura regressiva, consumo acima de 150% da média histórica e consumo zerado.
+- Histórico consolidado por período.
+- CSV, impressão/PDF, backup e restauração JSON.
+- Fotos e OCR experimental.
+- Dados continuam armazenados localmente no aparelho.
 
 ## Publicação
-Envie os arquivos para o repositório do GitHub Pages. Não é necessário Supabase nesta versão.
+Substitua os arquivos da V2 no repositório GitHub pelos arquivos desta pasta e publique pelo GitHub Pages.
 
 ## Importante
-Os dados são locais neste aparelho. Se o aplicativo for usado em mais de um aparelho e você quiser que todos compartilhem as mesmas leituras, a próxima versão deverá adicionar sincronização online.
+A V2.1 mantém a mesma chave de armazenamento da V2 (`agua_condominio_v2_data`) para preservar as leituras já registradas no aparelho.

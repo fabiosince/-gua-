@@ -20,6 +20,11 @@
     <div><span>Período de leitura</span><strong id="period"></strong></div>
     <button class="primary light" onclick="showScreen('readings')">Iniciar leituras</button>
   </div>
+  <div class="period-control panel">
+    <button class="secondary" onclick="shiftPeriod(-1)">‹</button>
+    <input id="periodPicker" type="month" onchange="setPeriod(this.value)">
+    <button class="secondary" onclick="shiftPeriod(1)">›</button>
+  </div>
   <div class="cards">
     <div class="card"><span>Unidades</span><b>80</b><small>residenciais</small></div>
     <div class="card"><span>Realizadas</span><b id="done">0</b><small id="donePct">0%</small></div>
@@ -68,9 +73,15 @@
 <section id="reports" class="screen">
   <div class="section-head"><div><div class="eyebrow">GESTÃO</div><h2>Relatórios</h2></div><button class="secondary" onclick="showScreen('dashboard')">Início</button></div>
   <div class="panel">
-    <h3>Dados deste mês</h3>
+    <h3>Fechamento — <span id="reportPeriod"></span></h3>
     <div class="report-grid"><div>Leituras <b id="rDone">0</b></div><div>Consumo residencial <b id="rRes">0,00 m³</b></div><div>Principal <b id="rMain">0,00 m³</b></div><div>Alertas <b id="rAlerts">0</b></div></div>
   </div>
+  <div class="panel">
+    <h3>Controle de perdas / diferença</h3>
+    <div class="report-grid"><div>Diferença <b id="lossM3">0,00 m³</b></div><div>Percentual <b id="lossPct">—</b></div></div>
+    <p class="muted">Diferença = consumo do medidor principal menos a soma das unidades. Uma diferença positiva pode indicar áreas comuns, variações de leitura ou perdas e deve ser analisada.</p>
+  </div>
+  <div class="panel chart-panel"><h3>Consumo residencial por unidade</h3><canvas id="consumptionChart" aria-label="Gráfico de consumo residencial"></canvas></div>
   <div class="panel actions">
     <button class="primary" onclick="exportCSV()">⬇️ Exportar CSV</button>
     <button class="secondary" onclick="printReport()">🖨️ Imprimir / PDF</button>
