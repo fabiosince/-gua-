@@ -78,8 +78,53 @@ function referencePeriod(period=selectedPeriod){const [y,m]=period.split('-').ma
 function renderReferences(){const refPeriod=referencePeriod();$('referencePeriodLabel').textContent=periodLabel(refPeriod);$('targetPeriodLabel').textContent=periodLabel(selectedPeriod);const box=state.references?.[selectedPeriod]||{};const priorReadings={};state.readings.filter(r=>r.period===refPeriod).forEach(r=>priorReadings[r.unitId]=r.current);$('referenceGrid').innerHTML=allUnits().map(u=>{const v=box[u.id]??priorReadings[u.id]??'';const label=u.number==='PRINCIPAL'?'Principal':u.number;return `<label class="reference-cell"><span>${label}</span><input class="reference-input" data-unit="${u.id}" type="number" step="0.01" min="0" inputmode="decimal" value="${v}" placeholder="0,00"></label>`}).join('');$('referenceCount').textContent=`${Object.values(box).filter(v=>v!==''&&v!==null&&v!==undefined).length}/81 preenchidas`}
 function saveReferences(){if(isClosed()){toast('O mês está fechado. Reabra o mês para alterar referências.');return}state.references=state.references||{};state.references[selectedPeriod]=state.references[selectedPeriod]||{};const refs=state.references[selectedPeriod];document.querySelectorAll('.reference-input').forEach(input=>{const id=input.dataset.unit;const raw=input.value.trim();if(raw==='')delete refs[id];else{const n=Number(raw.replace(',','.'));if(Number.isFinite(n)&&n>=0)refs[id]=n}});state.readings.forEach(r=>{if(r.period===selectedPeriod){const arr=state.readings.filter(x=>x.unitId===r.unitId&&x.period<selectedPeriod).sort((a,b)=>b.period.localeCompare(a.period));if(arr[0]?.current!==undefined)r.previous=Number(arr[0].current);else if(Object.prototype.hasOwnProperty.call(refs,r.unitId))r.previous=Number(refs[r.unitId]);}});saveState();renderReferences();updateDashboard();renderUnitPanel();renderUnits();renderAlerts();renderReports();toast('Referências aplicadas ao mês '+periodLabel(selectedPeriod)+'.')}
 function fillReferencesFromPreviousMonth(){if(isClosed()){toast('O mês está fechado. Reabra o mês para alterar referências.');return}const refPeriod=referencePeriod();state.references=state.references||{};state.references[selectedPeriod]=state.references[selectedPeriod]||{};const refs=state.references[selectedPeriod];let count=0;state.readings.filter(r=>r.period===refPeriod).forEach(r=>{refs[r.unitId]=Number(r.current);count++});state.readings.forEach(r=>{if(r.period===selectedPeriod){const arr=state.readings.filter(x=>x.unitId===r.unitId&&x.period<selectedPeriod).sort((a,b)=>b.period.localeCompare(a.period));if(arr[0]?.current!==undefined)r.previous=Number(arr[0].current);else if(Object.prototype.hasOwnProperty.call(refs,r.unitId))r.previous=Number(refs[r.unitId]);}});saveState();renderReferences();updateDashboard();renderUnitPanel();renderUnits();renderAlerts();renderReports();toast(count?`${count} leituras do mês anterior carregadas e aplicadas.`:'Não há leituras do mês anterior para carregar.')}
-function renderHistory(){const q=($('historySearch').value||'').toLowerCase();const rows=state.readings.filter(r=>r.unitId.toLowerCase().includes(q)).sort((a,b)=>b.period.localeCompare(a.period)||b.savedAt.localeCompare(a.savedAt));$('historyList').innerHTML=rows.length?rows.map(r=>{const c=Number(r.current)-Number(r.previous);return `<div class="history-item"><b>${r.unitId==='PRINCIPAL'?'UNIDADE PRINCIPAL':'UNIDADE '+r.unitId}</b><div class="unit-meta">${periodLabel(r.period)} • ${r.date} • anterior ${fmt(r.previous)} • atual ${fmt(r.current)}</div><div><strong>Consumo: ${fmt(c)} m³</strong> • <span class="status ${consumptionStatus(r.unitId,c,r.period).level==='critical'?'alert':consumptionStatus(r.unitId,c,r.period).level==='warning'?'warning':'ok'}">${consumptionStatus(r.unitId,c,r.period).label}</span>${r.notes?` • ${r.notes}`:''}</div></div>`}).join(''):'<div class="panel">Nenhuma leitura registrada ainda.</div>'}
-function averageConsumption(id,excludePeriod=null){const vals=state.readings.filter(r=>r.unitId===id&&r.period!==excludePeriod&&Number(r.current)>=Number(r.previous)).map(r=>Number(r.current)-Number(r.previous));return vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:null}
+function historyStatus(unitId,c,period){const st=consumptionStatus(unitId,c,period);return {level:st.level,label:st.label,reason:st.reason}}
+function renderHistory(){
+  const q=($('historySearch').value||'').toLowerCase();
+  const units=allUnits();
+  const sel=$('historyUnitSelect');
+  if(sel){
+    const current=sel.value||units[0]?.id||'';
+    sel.innerHTML=units.map(u=>`<option value="${u.id}">${u.id==='PRINCIPAL'?'UNIDADE PRINCIPAL':'UNIDADE '+u.number}</option>`).join('');
+    sel.value=units.some(u=>u.id===current)?current:(units[0]?.id||'');
+  }
+  const rows=state.readings.filter(r=>r.unitId.toLowerCase().includes(q)).sort((a,b)=>b.period.localeCompare(a.period)||String(b.savedAt).localeCompare(String(a.savedAt)));
+  $('historyList').innerHTML=rows.length?rows.map(r=>{
+    const c=Number(r.current)-Number(r.previous);
+    const st=historyStatus(r.unitId,c,r.period);
+    const cls=st.level==='critical'?'alert':st.level==='warning'?'warning':st.level==='pending'?'pending':'ok';
+    return `<div class="history-item history-clickable" onclick="selectHistoryUnit('${r.unitId}')"><b>${r.unitId==='PRINCIPAL'?'UNIDADE PRINCIPAL':'UNIDADE '+r.unitId}</b><div class="unit-meta">${periodLabel(r.period)} • ${r.date} • anterior ${fmt(r.previous)} • atual ${fmt(r.current)}</div><div><strong>Consumo: ${fmt(c)} m³</strong> • <span class="status ${cls}">${st.label}</span>${r.notes?` • ${r.notes}`:''}</div></div>`
+  }).join(''):'<div class="panel">Nenhuma leitura registrada ainda.</div>';
+  renderUnitHistory();
+}
+function selectHistoryUnit(id){const sel=$('historyUnitSelect');if(sel){sel.value=id;renderUnitHistory();$('unitHistorySummary')?.scrollIntoView({behavior:'smooth',block:'nearest'});}}
+function renderUnitHistory(){
+  const sel=$('historyUnitSelect');
+  const id=sel?.value;
+  if(!id){$('unitHistorySummary').innerHTML='';$('unitHistoryTable').innerHTML='';return;}
+  const readings=state.readings.filter(r=>r.unitId===id).sort((a,b)=>a.period.localeCompare(b.period)||String(a.date).localeCompare(String(b.date)));
+  const label=id==='PRINCIPAL'?'Unidade Principal':'Unidade '+id;
+  if(!readings.length){
+    $('unitHistorySummary').innerHTML=`<div class="history-summary"><b>${label}</b><span>Nenhuma leitura registrada.</span></div>`;
+    $('unitHistoryTable').innerHTML='';
+    return;
+  }
+  const total=readings.reduce((sum,r)=>{const c=Number(r.current)-Number(r.previous);return sum+(Number.isFinite(c)&&c>=0?c:0)},0);
+  const last=readings[readings.length-1];
+  const lastC=Number(last.current)-Number(last.previous);
+  const st=historyStatus(id,lastC,last.period);
+  const cls=st.level==='critical'?'alert':st.level==='warning'?'warning':st.level==='pending'?'pending':'ok';
+  $('unitHistorySummary').innerHTML=`<div class="history-summary"><div><b>${label}</b><small>${readings.length} período(s) registrado(s)</small></div><div><span>Último consumo</span><strong>${fmt(lastC)} m³</strong></div><div><span>Consumo acumulado</span><strong>${fmt(total)} m³</strong></div><div><span>Última situação</span><strong class="status ${cls}">${st.label}</strong></div></div>`;
+  const body=[...readings].reverse().map(r=>{
+    const c=Number(r.current)-Number(r.previous);
+    const x=historyStatus(id,c,r.period);
+    const ccls=x.level==='critical'?'alert':x.level==='warning'?'warning':x.level==='pending'?'pending':'ok';
+    const closed=isClosed(r.period);
+    return `<tr><td><b>${periodLabel(r.period)}</b></td><td>${fmt(r.previous)} m³</td><td>${fmt(r.current)} m³</td><td><b>${fmt(c)} m³</b></td><td><span class="status ${ccls}">${x.label}</span></td><td>${closed?'🔒 Fechado':'🟢 Aberto'}</td></tr>`;
+  }).join('');
+  $('unitHistoryTable').innerHTML=`<table class="monthly-table history-detail-table"><thead><tr><th>Período</th><th>Leitura anterior</th><th>Leitura atual</th><th>Consumo</th><th>Situação</th><th>Mês</th></tr></thead><tbody>${body}</tbody></table>`;
+}
+
 function renderAlerts(){const rows=allUnits().map(u=>{const r=currentReading(u.id);if(!r)return null;const c=Number(r.current)-Number(r.previous);const st=consumptionStatus(u.id,c,selectedPeriod);if(st.level==='normal'||st.level==='pending')return null;return {u,r,c,kind:st.level,text:st.reason}}).filter(Boolean);$('alertsList').innerHTML=rows.length?rows.map(x=>`<div class="history-item"><span class="status ${x.kind==='critical'?'alert':'warning'}">${x.kind==='critical'?'🚨 CRÍTICO':'⚠️ ALERTA MÉDIO'}</span><h3>${x.u.number==='PRINCIPAL'?'Unidade Principal':'Unidade '+x.u.number}</h3><div class="unit-meta">Consumo ${fmt(x.c)} m³ • ${x.text}</div><p class="muted">O alerta indica uma anomalia de consumo e não confirma vazamento. Se houver suspeita, faça o teste do hidrômetro com todos os pontos de água fechados.</p></div>`).join(''):'<div class="panel"><b>✓ Nenhum alerta de consumo acima do padrão neste período.</b><p class="muted">A comparação usa até os 3 períodos anteriores disponíveis para cada unidade.</p></div>'}
 function consumptionStatus(unitId, consumption, period=selectedPeriod){
   const n=Number(consumption);

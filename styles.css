@@ -36,3 +36,12 @@
   #printReportOnly th:first-child,#printReportOnly td:first-child{text-align:left!important;width:24%!important}
   #printReportOnly th{font-weight:700!important}
 }
+
+/* V2.18 — histórico completo por unidade */
+.history-selector-panel{margin-bottom:16px}
+.history-unit-select{width:100%;padding:13px 14px;border:1px solid var(--border,#d9dee7);border-radius:12px;background:#fff;font:inherit;font-weight:700}
+.history-summary{display:grid;grid-template-columns:1.5fr repeat(3,1fr);gap:10px;margin-top:14px;padding:14px;border-radius:14px;background:var(--soft,#f6f7f9);align-items:center}
+.history-summary>div{display:flex;flex-direction:column;gap:3px}.history-summary span,.history-summary small{font-size:12px;color:#6b7280}.history-summary strong{font-size:16px}.history-list-title{margin:18px 0 8px}
+.history-clickable{cursor:pointer}.history-clickable:hover{transform:translateY(-1px)}
+.history-detail-table th,.history-detail-table td{white-space:nowrap}
+@media(max-width:760px){.history-summary{grid-template-columns:1fr 1fr}.history-summary>div:first-child{grid-column:1/-1}.history-detail-table{font-size:12px}.history-detail-table th,.history-detail-table td{padding:7px 6px}}
