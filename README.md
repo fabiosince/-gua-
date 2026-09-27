@@ -20,3 +20,9 @@ Substitua os arquivos da V2 no repositório GitHub pelos arquivos desta pasta e 
 
 ## Importante
 A V2.1 mantém a mesma chave de armazenamento da V2 (`agua_condominio_v2_data`) para preservar as leituras já registradas no aparelho.
+
+
+## V2.1.1
+- A leitura anterior agora é editável.
+- O campo indica o mês de referência anterior (por exemplo, agosto/2026 para setembro/2026).
+- O valor informado é usado no cálculo do consumo mensal e é carregado automaticamente como referência nos meses seguintes quando houver leitura registrada.

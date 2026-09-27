@@ -109,7 +109,7 @@
     <div class="modal-head"><div><div class="eyebrow" id="modalType"></div><h2 id="modalTitle"></h2></div><button class="icon-btn" onclick="closeModal()">✕</button></div>
     <div class="form-grid">
       <label>Data<input id="readDate" type="date"></label>
-      <label>Leitura anterior (m³)<input id="prev" type="number" step="0.01" readonly></label>
+      <label>Leitura anterior (m³)<input id="prev" type="number" step="0.01" min="0" inputmode="decimal"><small id="prevHelp" class="muted">Informe a leitura do mês anterior. Este campo é editável.</small></label>
       <label>Leitura atual (m³)<input id="current" type="number" step="0.01" min="0" inputmode="decimal"></label>
       <label>Nº do hidrômetro<input id="meter" type="text" placeholder="Ex.: H-011"></label>
       <label class="full">Foto do hidrômetro<input id="photo" type="file" accept="image/*" capture="environment"></label>
