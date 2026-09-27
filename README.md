@@ -1,12 +1,12 @@
-# Água Condomínio — V2.20
+# Tangará Residencial — Controle de Água V2.22
 
-Aplicativo PWA para controle de leituras de água do Tangará Residencial.
+V2.22 prioriza uma leitura rápida e intuitiva no celular.
 
-## Novidades da V2.20
-- Interface inicial mais simples e orientada à ação.
-- Marca Tangará Residencial destacada no cabeçalho.
-- Ação "Próxima pendente" para iniciar rapidamente a próxima leitura.
-- Filtros em botões: Todas, Pendentes, Concluídas e Alertas.
-- Acesso direto a Alertas na navegação inferior.
-- Nome "Tangará Residencial" no ícone e no nome de instalação do aplicativo.
-- Mantidos histórico, fechamento mensal, alertas, backup e exportações.
+- Campo da leitura atual em destaque
+- Botões rápidos para pequenos ajustes
+- Foco automático no campo da leitura
+- Enter salva a leitura
+- Esc fecha a tela
+- Modo guiado continua levando à próxima unidade pendente
+- Identidade Tangará Residencial
+- Mantém histórico, alertas, fechamento, backup e exportações

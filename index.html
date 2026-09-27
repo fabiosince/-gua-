@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0b5cab">
 <link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="styles.css">
-<title>Tangará Residencial • Controle de Água V2.20</title>
+<title>Tangará Residencial • Controle de Água V2.22</title>
 </head>
 <body>
 <header class="topbar">
@@ -18,7 +18,7 @@
 <section id="dashboard" class="screen active">
   <div class="hero">
     <div><span>Período de leitura</span><strong id="period"></strong></div>
-    <div class="hero-actions"><button class="primary light" onclick="showScreen('readings')">▶ Começar leituras</button><button class="hero-next" onclick="openNextPending()">→ Próxima pendente</button></div>
+    <div class="hero-actions"><button class="primary light" onclick="startGuidedReading()">▶ Iniciar modo de leitura</button><button class="hero-next" onclick="openNextPending()">→ Próxima pendente</button></div>
   </div>
   <div class="period-control panel">
     <button class="secondary" onclick="shiftPeriod(-1)">‹</button>
@@ -152,11 +152,11 @@
 
 <div id="modal" class="modal">
   <div class="modal-card">
-    <div class="modal-head"><div><div class="eyebrow" id="modalType"></div><h2 id="modalTitle"></h2></div><button class="icon-btn" onclick="closeModal()">✕</button></div>
+    <div class="modal-head"><div><div class="eyebrow" id="modalType"></div><h2 id="modalTitle"></h2><div id="modalProgress" class="modal-progress"></div></div><button class="icon-btn" onclick="closeModal()">✕</button></div>
     <div class="form-grid">
       <label>Data<input id="readDate" type="date"></label>
       <label>Leitura anterior (m³)<input id="prev" type="number" step="0.01" min="0" inputmode="decimal" readonly><small id="prevHelp" class="muted">A leitura anterior é obtida automaticamente do mês anterior.</small></label>
-      <label>Leitura atual (m³)<input id="current" type="number" step="0.01" min="0" inputmode="decimal"></label>
+      <label class="current-reading-field full">Leitura atual (m³)<input id="current" type="number" step="0.01" min="0" inputmode="decimal" autocomplete="off" placeholder="0,00"><div class="quick-values"><button type="button" onclick="adjustCurrent(-1)">−1</button><button type="button" onclick="adjustCurrent(-0.1)">−0,1</button><button type="button" onclick="adjustCurrent(0.1)">+0,1</button><button type="button" onclick="adjustCurrent(1)">+1</button></div></label>
       <label>Nº do hidrômetro<input id="meter" type="text" placeholder="Ex.: H-011"></label>
       <label class="full">Foto do hidrômetro<input id="photo" type="file" accept="image/*" capture="environment"></label>
       <label class="full">Observações<textarea id="notes" rows="3" placeholder="Opcional"></textarea></label>
@@ -166,7 +166,7 @@
     <div id="ocrStatus" class="muted"></div>
     <div class="modal-actions">
       <button id="ocrBtn" class="secondary">🔢 Tentar leitura automática (OCR)</button>
-      <button class="primary" onclick="saveReading()">Salvar leitura</button>
+      <button id="saveReadingBtn" class="primary" onclick="saveReading()">Salvar leitura</button>
     </div>
   </div>
 </div>
