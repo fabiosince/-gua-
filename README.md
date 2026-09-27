@@ -26,3 +26,6 @@ A V2.1 mantém a mesma chave de armazenamento da V2 (`agua_condominio_v2_data`) 
 - A leitura anterior agora é editável.
 - O campo indica o mês de referência anterior (por exemplo, agosto/2026 para setembro/2026).
 - O valor informado é usado no cálculo do consumo mensal e é carregado automaticamente como referência nos meses seguintes quando houver leitura registrada.
+
+
+V2.1.5: tela para cadastro em massa das leituras de referência do mês anterior, preservando o histórico mensal e preenchendo automaticamente a leitura anterior no cadastro das unidades.

@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0b5cab">
 <link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="styles.css">
-<title>Leitura de Água • Condomínio V2.1.4</title>
+<title>Leitura de Água • Condomínio V2.1.5</title>
 </head>
 <body>
 <header class="topbar">
@@ -61,6 +61,7 @@
       <button class="secondary" onclick="showScreen('history')">📚 Histórico</button>
       <button class="secondary" onclick="showScreen('alerts')">⚠️ Alertas</button>
       <button class="secondary" onclick="showScreen('reports')">📊 Relatórios</button>
+      <button class="secondary" onclick="showScreen('references')">🗓️ Cadastrar mês anterior</button>
     </div>
   </div>
 </section>
@@ -83,6 +84,20 @@
 <section id="alerts" class="screen">
   <div class="section-head"><div><div class="eyebrow">REVISÃO</div><h2>Alertas</h2></div><button class="secondary" onclick="showScreen('dashboard')">Início</button></div>
   <div id="alertsList"></div>
+</section>
+
+<section id="references" class="screen">
+  <div class="section-head"><div><div class="eyebrow">CONFIGURAÇÃO MENSAL</div><h2>Leituras de referência</h2></div><button class="secondary" onclick="showScreen('dashboard')">Início</button></div>
+  <div class="panel reference-intro">
+    <div class="panel-title">Referência para <span id="targetPeriodLabel"></span></div>
+    <p class="muted">Cadastre os valores do mês anterior (<b id="referencePeriodLabel"></b>). Eles serão usados no cálculo de consumo do período selecionado.</p>
+    <div class="reference-actions"><button id="referenceFillBtn" class="secondary">↻ Carregar mês anterior</button><button id="referenceSaveBtn" class="primary">💾 Salvar referências</button></div>
+    <div class="reference-progress"><b id="referenceCount">0/81 preenchidas</b></div>
+  </div>
+  <div class="panel">
+    <div class="panel-title">Valores de referência</div>
+    <div id="referenceGrid" class="reference-grid"></div>
+  </div>
 </section>
 
 <section id="reports" class="screen">
