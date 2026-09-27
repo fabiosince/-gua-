@@ -6,11 +6,11 @@
 <meta name="theme-color" content="#0b5cab">
 <link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="styles.css">
-<title>Leitura de Água • Condomínio V2.11</title>
+<title>Leitura de Água • Condomínio V2.12</title>
 </head>
 <body>
 <header class="topbar">
-  <div><div class="eyebrow">CONTROLE DE CONSUMO</div><h1>💧 Leitura de Água</h1><small>Condomínio Tangará Residencial • V2.11</small></div>
+  <div><div class="eyebrow">CONTROLE DE CONSUMO</div><h1>💧 Leitura de Água</h1><small>Condomínio Tangará Residencial • V2.12</small></div>
   <button id="menuBtn" class="icon-btn" aria-label="Menu">☰</button>
 </header>
 
@@ -42,7 +42,7 @@
   <div class="panel unit-panel">
     <div class="panel-head-row">
       <div>
-        <div class="panel-title">Painel das unidades • V2.11</div>
+        <div class="panel-title">Painel das unidades • V2.12</div>
         <div class="muted">Toque em uma unidade para registrar ou editar a leitura.</div>
       </div>
       <div class="panel-progress"><b id="panelDone">0/81</b><span>feitas</span></div>
@@ -108,8 +108,17 @@
   </div>
   <div class="panel"><h3>Critério de consumo</h3><p class="muted">O consumo mensal é calculado pela diferença entre a leitura atual e a leitura anterior. Os alertas abaixo são objetivos e independem da média histórica.</p><div class="risk-table-wrap"><table class="risk-table"><thead><tr><th>Consumo no mês</th><th>Classificação</th><th>Ação</th></tr></thead><tbody><tr><td><strong>Até 25 m³</strong></td><td><span class="status ok">🟢 NORMAL</span></td><td>Sem alerta de consumo excessivo.</td></tr><tr><td><strong>Acima de 25 m³ até 50 m³</strong></td><td><span class="status warning">🟡 ALERTA MÉDIO</span></td><td>Recomenda-se verificar a unidade.</td></tr><tr><td><strong>Acima de 50 m³</strong></td><td><span class="status alert">🔴 ALERTA CRÍTICO</span></td><td>Verificação prioritária para possível consumo excessivo ou vazamento.</td></tr></tbody></table></div><div id="reportWarning"></div><div id="reportTable" class="monthly-table-wrap"></div></div>
   <div class="panel actions">
-    <button class="primary" onclick="exportCSV()">⬇️ Exportar relatório CSV</button>
-    <button class="secondary" onclick="printReport()">🖨️ Imprimir / PDF</button>
+    <div class="export-box">
+      <div class="panel-title">Exportar relatório</div>
+      <p class="muted">Escolha o formato do arquivo que deseja gerar.</p>
+      <div class="export-choice">
+        <select id="exportFormat" aria-label="Formato de exportação">
+          <option value="pdf">📄 PDF</option>
+          <option value="csv">📊 CSV</option>
+        </select>
+        <button class="primary" onclick="exportReport()">⬇️ Exportar arquivo</button>
+      </div>
+    </div>
     <button class="secondary" onclick="showScreen('history')">📚 Histórico detalhado</button>
     <button class="secondary" onclick="backupJSON()">💾 Fazer backup</button>
     <button class="secondary" onclick="document.getElementById('restore').click()">♻️ Restaurar backup</button>
