@@ -6,11 +6,11 @@
 <meta name="theme-color" content="#0b5cab">
 <link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="styles.css">
-<title>Leitura de Água • Condomínio V2.1.6</title>
+<title>Leitura de Água • Condomínio V2.2</title>
 </head>
 <body>
 <header class="topbar">
-  <div><div class="eyebrow">CONTROLE DE CONSUMO</div><h1>💧 Leitura de Água</h1><small>Condomínio Tangará Residencial</small></div>
+  <div><div class="eyebrow">CONTROLE DE CONSUMO</div><h1>💧 Leitura de Água</h1><small>Condomínio Tangará Residencial • V2.2</small></div>
   <button id="menuBtn" class="icon-btn" aria-label="Menu">☰</button>
 </header>
 
@@ -42,7 +42,7 @@
   <div class="panel unit-panel">
     <div class="panel-head-row">
       <div>
-        <div class="panel-title">Painel das unidades • V2.1.6</div>
+        <div class="panel-title">Painel das unidades • V2.2</div>
         <div class="muted">Toque em uma unidade para registrar ou editar a leitura.</div>
       </div>
       <div class="panel-progress"><b id="panelDone">0/81</b><span>feitas</span></div>
@@ -103,7 +103,7 @@
 <section id="reports" class="screen">
   <div class="section-head"><div><div class="eyebrow">GESTÃO</div><h2>Relatórios</h2></div><button class="secondary" onclick="showScreen('dashboard')">Início</button></div>
   <div class="panel">
-    <h3>Fechamento — <span id="reportPeriod"></span></h3>
+    <h3>Fechamento — <span id="reportPeriod"></span></h3><div class="closure-row"><span>Status do mês</span><b id="reportStatus" class="closure-status open">ABERTO</b><button id="closureBtn" class="primary" onclick="toggleClosure()">🔒 Fechar mês</button></div>
     <div class="report-grid"><div>Leituras <b id="rDone">0</b></div><div>Consumo residencial <b id="rRes">0,00 m³</b></div><div>Principal <b id="rMain">0,00 m³</b></div><div>Alertas <b id="rAlerts">0</b></div></div>
   </div>
   <div class="panel">
