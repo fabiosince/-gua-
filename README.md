@@ -1,4 +1,4 @@
-# Água Condomínio V2.8
+# Água Condomínio V2.9
 
 ## Regra de sequência mensal
 A leitura atual de um mês passa automaticamente a ser a leitura anterior do mês seguinte.
