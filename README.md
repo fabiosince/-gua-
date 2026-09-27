@@ -1,18 +1,18 @@
-# Água Condomínio V2.10
+# Água Condomínio V2.11
 
-## Sequência mensal
-A leitura atual de um mês passa a ser a leitura anterior do mês seguinte.
-
-## Classificação de consumo
-A classificação agora usa limites objetivos por consumo mensal:
+## Alertas objetivos de consumo
+A classificação do consumo mensal usa a diferença entre leitura atual e leitura anterior:
 - Até 25 m³: NORMAL
 - Acima de 25 m³ até 50 m³: ALERTA MÉDIO
 - Acima de 50 m³: ALERTA CRÍTICO
 
-O alerta crítico indica necessidade de verificação prioritária por possível consumo excessivo ou vazamento, mas não confirma vazamento.
+Os alertas aparecem no painel das unidades, na tela de leitura e no relatório mensal. O alerta crítico indica necessidade de verificação prioritária por possível consumo excessivo ou vazamento, mas não confirma vazamento.
 
-## Painel e relatório
-As unidades aparecem com a situação no painel de leitura e no relatório mensal. O relatório mostra somente o período selecionado: unidade, leitura anterior, leitura atual, consumo e situação, além das unidades em alerta.
+## Sequência mensal
+A leitura atual de um mês passa a ser a leitura anterior do mês seguinte.
+
+## Relatório
+Mostra somente o período selecionado: unidade, leitura anterior, leitura atual, consumo e situação, além das unidades que exigem verificação.
 
 ## Dados
 As leituras permanecem no armazenamento local do aparelho. Não há login ou sincronização em nuvem.
