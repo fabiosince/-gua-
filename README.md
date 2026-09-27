@@ -1,18 +1,24 @@
-# Água • Controle de Consumo do Condomínio
+# Água Condomínio V2
 
-MVP PWA offline para 80 unidades (11–18, 21–28, ... 101–108) + Unidade Principal.
+V2 preparada para GitHub Pages + Supabase.
 
-## Recursos
-- Dashboard
-- 81 medidores
-- Leitura anterior/atual e cálculo automático
-- Foto do hidrômetro
-- Histórico mensal local
-- Alertas de leitura inconsistente e consumo anormal
-- Comparação residencial x principal
-- CSV, backup JSON e impressão/PDF
-- Instalação como PWA no Android
-- Funcionamento offline após o primeiro carregamento
+## O que entra nesta V2
+- login por e-mail e senha;
+- banco online;
+- 80 unidades + Unidade Principal;
+- leitura mensal e cálculo de consumo;
+- histórico;
+- alertas de leitura inconsistente;
+- foto preparada para a próxima camada;
+- PWA instalável.
 
-## Publicação
-Hospede esta pasta em um servidor HTTPS (GitHub Pages, Netlify, Vercel etc.). Abra no Chrome Android e use "Adicionar à tela inicial/Instalar".
+## Configuração
+1. Crie um projeto em Supabase.
+2. SQL Editor: execute `supabase-schema.sql`.
+3. Copie Project URL e chave pública para `config.js`.
+4. Crie um usuário pelo aplicativo.
+5. No SQL Editor, transforme o usuário em admin:
+`update public.profiles set role='admin' where id='UUID_DO_USUARIO';`
+6. Envie estes arquivos para o mesmo repositório GitHub e aguarde o GitHub Pages atualizar.
+
+Nunca coloque a chave `service_role` no GitHub.
