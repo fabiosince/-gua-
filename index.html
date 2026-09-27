@@ -6,11 +6,11 @@
 <meta name="theme-color" content="#0b5cab">
 <link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="styles.css">
-<title>Leitura de Água • Condomínio V2.16</title>
+<title>Leitura de Água • Condomínio V2.19</title>
 </head>
 <body>
 <header class="topbar">
-  <div><div class="eyebrow">CONTROLE DE CONSUMO</div><h1>💧 Leitura de Água</h1><small>Condomínio Tangará Residencial • V2.17</small></div>
+  <div><div class="eyebrow">CONTROLE DE CONSUMO</div><h1>💧 Leitura de Água</h1><small>Condomínio Tangará Residencial • V2.19</small></div>
   <button id="menuBtn" class="icon-btn" aria-label="Menu">☰</button>
 </header>
 
@@ -40,9 +40,10 @@
     </div>
   </div>
   <div class="panel unit-panel">
+    <div class="quick-unit-search"><input id="dashboardUnitSearch" class="search" placeholder="🔎 Buscar unidade no painel (ex.: 24, 108 ou PRINCIPAL)" oninput="renderUnitPanel()"><button class="secondary" type="button" onclick="clearDashboardUnitSearch()">Limpar</button></div>
     <div class="panel-head-row">
       <div>
-        <div class="panel-title">Painel das unidades • V2.17</div>
+        <div class="panel-title">Painel das unidades • V2.19</div>
         <div class="muted">Toque em uma unidade para registrar ou editar a leitura.</div>
       </div>
       <div class="panel-progress"><b id="panelDone">0/81</b><span>feitas</span></div>

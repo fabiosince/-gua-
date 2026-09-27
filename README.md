@@ -1,4 +1,4 @@
-# Água Condomínio V2.18
+# Água Condomínio V2.19
 
 ## Alertas objetivos de consumo
 A classificação do consumo mensal usa a diferença entre leitura atual e leitura anterior:
@@ -22,15 +22,22 @@ As leituras permanecem no armazenamento local do aparelho. Não há login ou sin
 O relatório mensal pode ser exportado escolhendo entre PDF (impressão/Salvar como PDF do navegador) e CSV.
 
 
-V2.18: exportação com escolha visual entre PDF e CSV antes de gerar o relatório; cache atualizado para v2-16.
+V2.19: exportação com escolha visual entre PDF e CSV antes de gerar o relatório; cache atualizado para v2-16.
 
 
-V2.18: exportação enxuta. PDF e CSV contêm somente Unidade, Leitura anterior, Leitura atual e Consumo. O PDF é formatado para uma única página A4.
+V2.19: exportação enxuta. PDF e CSV contêm somente Unidade, Leitura anterior, Leitura atual e Consumo. O PDF é formatado para uma única página A4.
 
 
-## V2.18 — Histórico completo por unidade
+## V2.19 — Histórico completo por unidade
 - Histórico mensal completo de cada unidade.
 - Resumo de último consumo e consumo acumulado.
 - Classificação de cada período.
 - Indicação de mês aberto/fechado.
 - Clique em uma medição para abrir o histórico daquela unidade.
+
+
+## V2.19 — Busca rápida no painel
+- Campo de busca rápida no painel principal.
+- Busca por número da unidade, identificação PRINCIPAL ou hidrômetro.
+- Botão Limpar para retornar às 81 unidades.
+- Mantém histórico, fechamento mensal e exportação da V2.18.

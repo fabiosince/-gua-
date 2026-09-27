@@ -45,3 +45,7 @@
 .history-clickable{cursor:pointer}.history-clickable:hover{transform:translateY(-1px)}
 .history-detail-table th,.history-detail-table td{white-space:nowrap}
 @media(max-width:760px){.history-summary{grid-template-columns:1fr 1fr}.history-summary>div:first-child{grid-column:1/-1}.history-detail-table{font-size:12px}.history-detail-table th,.history-detail-table td{padding:7px 6px}}
+
+/* V2.19 — busca rápida no painel */
+.quick-unit-search{display:flex;gap:8px;margin-bottom:12px;align-items:center}.quick-unit-search .search{flex:1;margin:0}.quick-unit-search .secondary{white-space:nowrap}
+@media(max-width:520px){.quick-unit-search{align-items:stretch}.quick-unit-search .secondary{padding-left:12px;padding-right:12px}}

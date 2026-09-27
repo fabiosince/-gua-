@@ -40,10 +40,13 @@ function allUnits(){return UNIT_NUMBERS.map(unitObj)}
 function setPeriod(v){if(!/^\d{4}-\d{2}$/.test(v))return;selectedPeriod=v;$('periodPicker').value=v;$('period').textContent=periodLabel(v);updateDashboard();renderUnitPanel();renderUnits();renderAlerts();renderReports();renderHistory()}
 function shiftPeriod(delta){const [y,m]=selectedPeriod.split('-').map(Number);const d=new Date(y,m-1+delta,1);setPeriod(monthKey(d))}
 function updateDashboard(){const units=allUnits(),cur=units.map(u=>({u,r:currentReading(u.id)}));const done=cur.filter(x=>x.r).length;let res=0,main=0,alerts=0;cur.forEach(x=>{if(!x.r)return;const c=Number(x.r.current)-Number(x.r.previous);const st=consumptionStatus(x.u.id,c,selectedPeriod);if(st.level==='warning'||st.level==='critical'||st.level==='negative')alerts++;if(x.u.type==='principal')main+=Math.max(c,0);else res+=Math.max(c,0)});$('done').textContent=done;$('donePct').textContent=Math.round(done/81*100)+'%';$('pending').textContent=81-done;$('alertCount').textContent=alerts;$('resTotal').textContent=fmt(res)+' m³';$('mainTotal').textContent=fmt(main)+' m³';$('diffTotal').textContent=fmt(main-res)+' m³'}
+function clearDashboardUnitSearch(){const input=$('dashboardUnitSearch');if(input){input.value='';renderUnitPanel();input.focus()}}
 function renderUnitPanel(){
   const el=$('unitPanel');
   if(!el)return;
-  const units=allUnits();
+  const q=($('dashboardUnitSearch')?.value||'').trim().toLowerCase();
+  const all=allUnits();
+  const units=q?all.filter(u=>{const label=u.number==='PRINCIPAL'?'principal unidade principal':`unidade ${u.number}`;return label.toLowerCase().includes(q)||String(u.meter||'').toLowerCase().includes(q)}):all;
   let done=0, warning=0, critical=0;
   el.innerHTML=units.map(u=>{
     const r=currentReading(u.id);
@@ -57,8 +60,8 @@ function renderUnitPanel(){
     const icon=status==='done'?'✓':status==='critical'?'!':status==='warning'?'⚠':'•';
     const title=status==='done'?`Normal • ${fmt(c)} m³`:status==='warning'?`Suspeita • ${fmt(c)} m³ • ${st.reason}`:status==='critical'?`Acima do normal • ${fmt(c)} m³ • ${st.reason}`:'Leitura pendente';
     return `<button class="unit-panel-item ${status}" title="${title}" onclick="openModal('${u.id}')"><span class="unit-panel-number">${label}</span><span class="unit-panel-status">${icon}</span></button>`;
-  }).join('');
-  $('panelDone').textContent=`${done}/${units.length}`;
+  }).join('') || '<div class="panel" style="grid-column:1/-1">Nenhuma unidade encontrada para esta busca.</div>';
+  $('panelDone').textContent=`${done}/${all.length}`;
   const summary=$('panelRiskSummary');
   if(summary)summary.innerHTML=`<span class="risk-mini normal">● Normal</span><span class="risk-mini warning">⚠ Suspeita: ${warning}</span><span class="risk-mini critical">! Acima do normal: ${critical}</span>`;
 }
