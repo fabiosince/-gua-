@@ -1,4 +1,4 @@
-# Água Condomínio V2.15
+# Água Condomínio V2.16
 
 ## Alertas objetivos de consumo
 A classificação do consumo mensal usa a diferença entre leitura atual e leitura anterior:
@@ -22,7 +22,7 @@ As leituras permanecem no armazenamento local do aparelho. Não há login ou sin
 O relatório mensal pode ser exportado escolhendo entre PDF (impressão/Salvar como PDF do navegador) e CSV.
 
 
-V2.15: exportação com escolha visual entre PDF e CSV antes de gerar o relatório; cache atualizado para v2-15.
+V2.16: exportação com escolha visual entre PDF e CSV antes de gerar o relatório; cache atualizado para v2-16.
 
 
-V2.15: exportação enxuta. PDF e CSV contêm somente Unidade, Leitura anterior, Leitura atual e Consumo. O PDF é formatado para uma única página A4.
+V2.16: exportação enxuta. PDF e CSV contêm somente Unidade, Leitura anterior, Leitura atual e Consumo. O PDF é formatado para uma única página A4.

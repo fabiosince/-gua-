@@ -87,7 +87,18 @@ let selectedExportFormat='pdf';
 function selectExportFormat(format){selectedExportFormat=format;document.querySelectorAll('.export-format').forEach(b=>b.classList.toggle('selected',b.dataset.format===format));const btn=document.querySelector('.export-main-btn');if(btn)btn.textContent=format==='csv'?'⬇️ Exportar relatório em CSV':'⬇️ Exportar relatório em PDF'}
 function exportReport(){if(selectedExportFormat==='csv'){exportCSV();return}printReport()}
 function renderPrintReport(){const d=reportData();const label=u=>u==='PRINCIPAL'?'Principal':u;const esc=v=>String(v).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');const cell=v=>v===''?'':Number(v).toFixed(2);const el=$('printReportOnly');if(!el)return;el.innerHTML=`<table><thead><tr><th>Unidade</th><th>Leitura anterior</th><th>Leitura atual</th><th>Consumo</th></tr></thead><tbody>${d.rows.map(x=>`<tr><td>${esc(label(x.unit))}</td><td>${esc(cell(x.previous))}</td><td>${esc(cell(x.current))}</td><td>${esc(cell(x.consumption))}</td></tr>`).join('')}</tbody></table>`}
-function printReport(){renderPrintReport();showScreen('reports');setTimeout(()=>{window.print();toast('PDF preparado com apenas as leituras.')},100)}
+function printReport(){
+  const d=reportData();
+  const label=u=>u==='PRINCIPAL'?'Unidade Principal':'Unidade '+u;
+  const cell=v=>v===''?'':Number(v).toFixed(2);
+  const esc=v=>String(v).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('\"','&quot;');
+  const rows=d.rows.map(x=>`<tr><td>${esc(label(x.unit))}</td><td>${esc(cell(x.previous))}</td><td>${esc(cell(x.current))}</td><td>${esc(cell(x.consumption))}</td></tr>`).join('');
+  const html=`<!doctype html><html><head><meta charset="utf-8"><title>Leituras ${selectedPeriod}</title><style>
+  @page{size:A4 landscape;margin:5mm}html,body{margin:0;padding:0;background:#fff;color:#111;font-family:Arial,sans-serif}body{font-size:7.5px}table{width:100%;border-collapse:collapse;table-layout:fixed}th,td{border:1px solid #777;padding:1.5px 3px;height:9px;line-height:1;white-space:nowrap}th{font-weight:700;background:#f2f2f2}th:first-child,td:first-child{text-align:left;width:34%}th:not(:first-child),td:not(:first-child){text-align:right;width:22%}</style></head><body><table><thead><tr><th>Unidade</th><th>Leitura anterior</th><th>Leitura atual</th><th>Consumo</th></tr></thead><tbody>${rows}</tbody></table><script>window.onload=function(){setTimeout(function(){window.print()},150)};<\/script></body></html>`;
+  const w=window.open('','_blank');
+  if(w){w.document.open();w.document.write(html);w.document.close();toast('PDF preparado somente com as leituras.');return}
+  renderPrintReport();showScreen('reports');setTimeout(()=>{window.print();toast('PDF preparado somente com as leituras.')},100);
+}
 function toast(t){const el=$('toast');el.textContent=t;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2300)}
 $('periodPicker').value=selectedPeriod;$('period').textContent=periodLabel(selectedPeriod);renderReferences();updateDashboard();renderUnitPanel();renderUnits();renderAlerts();renderReports();
 if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
