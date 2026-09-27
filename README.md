@@ -1,24 +1,24 @@
-# Água Condomínio V2
+# Água Condomínio — V2 sem login
 
-V2 preparada para GitHub Pages + Supabase.
+Aplicativo PWA para registrar leituras dos hidrômetros das 80 unidades (11–18, 21–28, ... 101–108) e da Unidade Principal.
 
-## O que entra nesta V2
-- login por e-mail e senha;
-- banco online;
-- 80 unidades + Unidade Principal;
-- leitura mensal e cálculo de consumo;
+## Características
+- acesso direto, sem login;
+- 81 medidores cadastrados;
+- leitura anterior e atual;
+- cálculo automático em m³;
+- foto do hidrômetro;
+- OCR experimental para sugerir a leitura;
 - histórico;
 - alertas de leitura inconsistente;
-- foto preparada para a próxima camada;
-- PWA instalável.
+- relatórios;
+- CSV, impressão/PDF;
+- backup e restauração;
+- funcionamento offline após o primeiro carregamento;
+- dados gravados no aparelho via localStorage.
 
-## Configuração
-1. Crie um projeto em Supabase.
-2. SQL Editor: execute `supabase-schema.sql`.
-3. Copie Project URL e chave pública para `config.js`.
-4. Crie um usuário pelo aplicativo.
-5. No SQL Editor, transforme o usuário em admin:
-`update public.profiles set role='admin' where id='UUID_DO_USUARIO';`
-6. Envie estes arquivos para o mesmo repositório GitHub e aguarde o GitHub Pages atualizar.
+## Publicação
+Envie os arquivos para o repositório do GitHub Pages. Não é necessário Supabase nesta versão.
 
-Nunca coloque a chave `service_role` no GitHub.
+## Importante
+Os dados são locais neste aparelho. Se o aplicativo for usado em mais de um aparelho e você quiser que todos compartilhem as mesmas leituras, a próxima versão deverá adicionar sincronização online.

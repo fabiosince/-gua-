@@ -1,9 +1,21 @@
 {
-  "name": "Água Condomínio V2",
-  "short_name": "Água Condomínio",
+  "name": "Leitura de Água • Condomínio",
+  "short_name": "Leitura Água",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#f4f7fb",
   "theme_color": "#0b5cab",
-  "lang": "pt-BR"
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ]
 }

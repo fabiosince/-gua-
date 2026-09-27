@@ -1,72 +1,121 @@
-<!doctype html><html lang="pt-BR"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0b5cab"><link rel="manifest" href="manifest.json">
-<title>Água Condomínio V2</title>
-<style>
-*{box-sizing:border-box}body{margin:0;font-family:system-ui;background:#f4f7fb;color:#142033;padding-bottom:70px}
-header{background:#fff;padding:15px 18px;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:5;display:flex;justify-content:space-between}
-main{max-width:900px;margin:auto;padding:16px}.box,.unit{background:#fff;border:1px solid #e3eaf2;border-radius:16px;padding:15px;margin:10px 0}
-h1{font-size:20px;margin:2px 0}.eyebrow{font-size:10px;color:#0b5cab;font-weight:800;letter-spacing:1px}
-button{border:0;border-radius:11px;padding:11px 14px;font-weight:800}.primary{background:#0b5cab;color:#fff}.secondary{background:#eaf1f8;color:#17324d}
-input{width:100%;padding:12px;border:1px solid #d4dfea;border-radius:10px;margin:5px 0 12px;font-size:15px}
-.tabs{display:flex;gap:5px;margin:15px 0}.tabs button{flex:1}.active{background:#0b5cab;color:white}
-.auth{max-width:430px;margin:8vh auto;padding:20px}.hero{background:linear-gradient(135deg,#0b5cab,#1689c8);color:white;border-radius:18px;padding:20px}.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.card{background:#fff;border:1px solid #e3eaf2;border-radius:14px;padding:14px}.card b{font-size:24px;display:block}
-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #ddd;display:flex;justify-content:space-around;padding:8px;z-index:10}nav button{background:white;color:#667}nav button.sel{color:#0b5cab}
-.row{display:flex;justify-content:space-between;align-items:center;gap:10px}.muted{color:#718096;font-size:13px}.ok{color:#14733d}.warn{color:#a52727}
-.modal{position:fixed;inset:0;background:#0008;display:none;align-items:end;z-index:20}.modal.show{display:flex}.modal>div{background:white;border-radius:20px 20px 0 0;width:100%;max-width:800px;margin:auto;padding:18px;max-height:90vh;overflow:auto}
-@media(min-width:650px){.cards{grid-template-columns:repeat(4,1fr)}.modal{align-items:center}.modal>div{border-radius:20px}}
-</style></head><body>
-<div id="auth" class="auth box"><div class="eyebrow">CONTROLE DE CONSUMO</div><h1>💧 Água do Condomínio V2</h1>
-<div class="tabs"><button id="lt" class="active">Entrar</button><button id="st">Criar acesso</button></div>
-<input id="email" type="email" placeholder="E-mail"><input id="pass" type="password" placeholder="Senha">
-<button id="authBtn" class="primary" style="width:100%">Entrar</button><p id="authMsg" class="muted"></p></div>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b5cab">
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="styles.css">
+<title>Leitura de Água • Condomínio</title>
+</head>
+<body>
+<header class="topbar">
+  <div><div class="eyebrow">CONTROLE DE CONSUMO</div><h1>💧 Leitura de Água</h1><small>Condomínio Tangará Residencial</small></div>
+  <button id="menuBtn" class="icon-btn" aria-label="Menu">☰</button>
+</header>
 
-<div id="app" hidden><header><div><div class="eyebrow">CONSUMO DE ÁGUA</div><h1>💧 Condomínio</h1><small id="who" class="muted"></small></div><button id="logout" class="secondary">Sair</button></header>
 <main>
-<section id="home"><div class="hero"><div>Período<strong id="period"></strong></div><br><button class="primary" onclick="screen('read')">Iniciar leituras</button></div>
-<div class="cards"><div class="card">Unidades<b>80</b></div><div class="card">Realizadas<b id="done">0</b></div><div class="card">Pendentes<b id="pend">81</b></div><div class="card">Alertas<b id="alerts">0</b></div></div>
-<div class="box"><b>Consumo</b><p>Residencial: <b id="res">0,00</b> m³</p><p>Principal: <b id="main">0,00</b> m³</p><p>Diferença: <b id="dif">0,00</b> m³</p></div></section>
+<section id="dashboard" class="screen active">
+  <div class="hero">
+    <div><span>Período de leitura</span><strong id="period"></strong></div>
+    <button class="primary light" onclick="showScreen('readings')">Iniciar leituras</button>
+  </div>
+  <div class="cards">
+    <div class="card"><span>Unidades</span><b>80</b><small>residenciais</small></div>
+    <div class="card"><span>Realizadas</span><b id="done">0</b><small id="donePct">0%</small></div>
+    <div class="card"><span>Pendentes</span><b id="pending">81</b><small>incluindo principal</small></div>
+    <div class="card"><span>Alertas</span><b id="alertCount">0</b><small>para revisar</small></div>
+  </div>
+  <div class="panel">
+    <div class="panel-title">Resumo do consumo</div>
+    <div class="summary">
+      <div><span>Unidades</span><strong id="resTotal">0,00 m³</strong></div>
+      <div><span>Principal</span><strong id="mainTotal">0,00 m³</strong></div>
+      <div><span>Diferença</span><strong id="diffTotal">0,00 m³</strong></div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-title">Ações rápidas</div>
+    <div class="actions">
+      <button class="secondary" onclick="showScreen('readings')">📋 Lista de unidades</button>
+      <button class="secondary" onclick="showScreen('history')">📚 Histórico</button>
+      <button class="secondary" onclick="showScreen('alerts')">⚠️ Alertas</button>
+      <button class="secondary" onclick="showScreen('reports')">📊 Relatórios</button>
+    </div>
+  </div>
+</section>
 
-<section id="read" hidden><div class="row"><h2>Leituras</h2><button class="secondary" onclick="screen('home')">Início</button></div>
-<input id="search" placeholder="Pesquisar unidade ou hidrômetro" oninput="render()"><div id="units"></div></section>
+<section id="readings" class="screen">
+  <div class="section-head"><div><div class="eyebrow">81 MEDIDORES</div><h2>Leituras</h2></div><button class="secondary" onclick="showScreen('dashboard')">Início</button></div>
+  <div class="filters">
+    <input id="search" class="search" placeholder="🔎 Buscar unidade ou hidrômetro" oninput="renderUnits()">
+    <select id="filter" onchange="renderUnits()"><option value="all">Todas</option><option value="pending">Pendentes</option><option value="done">Realizadas</option><option value="alert">Alertas</option></select>
+  </div>
+  <div id="unitList" class="unit-list"></div>
+</section>
 
-<section id="history" hidden><div class="row"><h2>Histórico</h2><button class="secondary" onclick="screen('home')">Início</button></div><div id="hist"></div></section>
-<section id="alerts" hidden><div class="row"><h2>Alertas</h2><button class="secondary" onclick="screen('home')">Início</button></div><div id="alist"></div></section>
-</main><nav><button class="sel" onclick="screen('home')">⌂<br>Início</button><button onclick="screen('read')">▣<br>Leituras</button><button onclick="screen('history')">◷<br>Histórico</button><button onclick="screen('alerts')">⚠<br>Alertas</button></nav></div>
+<section id="history" class="screen">
+  <div class="section-head"><div><div class="eyebrow">MEDIÇÕES SALVAS</div><h2>Histórico</h2></div><button class="secondary" onclick="showScreen('dashboard')">Início</button></div>
+  <div class="filters"><input id="historySearch" class="search" placeholder="🔎 Filtrar por unidade" oninput="renderHistory()"></div>
+  <div id="historyList"></div>
+</section>
 
-<div id="modal" class="modal"><div><div class="row"><h2 id="mt"></h2><button class="secondary" onclick="closeM()">✕</button></div>
-<label>Data<input id="date" type="date"></label><label>Anterior<input id="prev" type="number" step=".01" readonly></label>
-<label>Atual<input id="cur" type="number" step=".01"></label><label>Hidrômetro<input id="meter"></label>
-<label>Foto<input id="photo" type="file" accept="image/*" capture="environment"></label><button id="ocr" class="secondary">🔢 OCR experimental</button>
-<p id="ocrmsg" class="muted"></p><p id="calc"></p><label>Observações<input id="notes"></label><button id="save" class="primary" style="width:100%">Salvar e sincronizar</button></div></div>
+<section id="alerts" class="screen">
+  <div class="section-head"><div><div class="eyebrow">REVISÃO</div><h2>Alertas</h2></div><button class="secondary" onclick="showScreen('dashboard')">Início</button></div>
+  <div id="alertsList"></div>
+</section>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js"></script>
-<script>
-const $=x=>document.getElementById(x),period=()=>new Date().toISOString().slice(0,7),today=()=>new Date().toISOString().slice(0,10);
-let sb=null,units=[],reads=[],selected=null,signup=false,photo=null;
-const fmt=n=>Number(n||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
-function screen(id){['home','read','history','alerts'].forEach(x=>$(x).hidden=x!==id);document.querySelectorAll('nav button').forEach(b=>b.classList.remove('sel'));render()}
-function configured(){return window.SUPABASE_URL&&!window.SUPABASE_URL.startsWith('COLE_')}
-async function init(){if(!configured()){ $('authMsg').textContent='Configure config.js com a URL e chave pública do Supabase.';return}
-sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);let s=await sb.auth.getSession();if(s.data.session)enter(s.data.session);sb.auth.onAuthStateChange((_e,s)=>s?enter(s):location.reload())}
-$('lt').onclick=()=>{signup=false;$('lt').classList.add('active');$('st').classList.remove('active');$('authBtn').textContent='Entrar'}
-$('st').onclick=()=>{signup=true;$('st').classList.add('active');$('lt').classList.remove('active');$('authBtn').textContent='Criar acesso'}
-$('authBtn').onclick=async()=>{let e=$('email').value,p=$('pass').value;if(p.length<6)return $('authMsg').textContent='A senha deve ter pelo menos 6 caracteres.';let r=signup?await sb.auth.signUp({email:e,password:p}):await sb.auth.signInWithPassword({email:e,password:p});$('authMsg').textContent=r.error?r.error.message:'Aguarde…'}
-$('logout').onclick=()=>sb.auth.signOut();
-async function enter(s){$('auth').hidden=true;$('app').hidden=false;$('who').textContent=s.user.email;$('period').textContent=new Date().toLocaleDateString('pt-BR',{month:'long',year:'numeric'});await load();render()}
-async function load(){let u=await sb.from('units').select('*').order('id');units=u.data||[];let r=await sb.from('readings').select('*').eq('period',period());reads=r.data||[];update()}
-function cur(id){return reads.find(r=>r.unit_id===id)}
-function render(){if($('read').hidden===false)renderUnits();if($('history').hidden===false)renderHistory();if($('alerts').hidden===false)renderAlerts()}
-function renderUnits(){let q=$('search').value.toLowerCase();$('units').innerHTML=units.filter(u=>String(u.number).includes(q)||(u.meter_id||'').toLowerCase().includes(q)).map(u=>{let r=cur(u.id),c=r?Number(r.current_reading)-Number(r.previous_reading):0;return `<div class="unit row"><div><b>${u.number}</b><div class="muted">${u.type==='principal'?'Medidor principal':'Hidrômetro individual'}</div><small class="${r?(c<0?'warn':'ok'):''}">${r?'Leitura: '+fmt(r.current_reading)+' m³ • Consumo: '+fmt(c)+' m³':'PENDENTE'}</small></div><button class="${r?'secondary':'primary'}" onclick="openM('${u.id}')">${r?'Editar':'Ler'}</button></div>`}).join('')}
-function openM(id){selected=units.find(u=>u.id===id);let r=cur(id);$('mt').textContent=selected.number;$('date').value=r?.reading_date||today();$('prev').value=r?.previous_reading||0;$('cur').value=r?.current_reading||'';$('meter').value=r?.meter_id||selected.meter_id||'';$('notes').value=r?.notes||'';$('photo').value='';photo=null;$('ocrmsg').textContent='';$('modal').classList.add('show');$('cur').focus()}
-function closeM(){$('modal').classList.remove('show')}
-$('cur').oninput=()=>{$('calc').textContent='Consumo: '+fmt(Number($('cur').value)-Number($('prev').value))+' m³'}
-$('photo').onchange=e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>photo=r.result;r.readAsDataURL(f)}
-$('ocr').onclick=()=>{$('ocrmsg').textContent='OCR ficará ativo na próxima etapa com processamento otimizado do visor. Confirme sempre o valor manualmente.'}
-$('save').onclick=async()=>{let p=Number($('prev').value),c=Number($('cur').value);if(!Number.isFinite(c)||c<0)return alert('Informe a leitura atual.');if(c<p&&!confirm('Atual menor que anterior. Salvar?'))return;let {data:{user}}=await sb.auth.getUser();let payload={unit_id:selected.id,reading_date:$('date').value,period:period(),previous_reading:p,current_reading:c,meter_id:$('meter').value||null,notes:$('notes').value||null,user_id:user.id,updated_at:new Date().toISOString()};let r=await sb.from('readings').upsert(payload,{onConflict:'unit_id,period'}).select().single();if(r.error)return alert(r.error.message);await load();closeM();render();alert('Leitura sincronizada.')}
-function update(){let d=0,res=0,main=0,a=0;units.forEach(u=>{let r=cur(u.id);if(r){d++;let c=Number(r.current_reading)-Number(r.previous_reading);if(c<0)a++;if(u.type==='principal')main+=Math.max(c,0);else res+=Math.max(c,0)}});$('done').textContent=d;$('pend').textContent=81-d;$('alerts').textContent=a;$('res').textContent=fmt(res);$('main').textContent=fmt(main);$('dif').textContent=fmt(main-res)}
-async function renderHistory(){let r=await sb.from('readings').select('*').order('reading_date',{ascending:false}).limit(200);$('hist').innerHTML=(r.data||[]).map(x=>`<div class="box"><b>${units.find(u=>u.id===x.unit_id)?.number||x.unit_id}</b><div class="muted">${x.reading_date} • ${fmt(x.previous_reading)} → ${fmt(x.current_reading)} • ${fmt(x.consumption)} m³</div></div>`).join('')||'<div class="box">Sem histórico.</div>'}
-function renderAlerts(){let a=reads.filter(x=>Number(x.consumption)<0);$('alist').innerHTML=a.map(x=>`<div class="box warn"><b>⚠️ ${units.find(u=>u.id===x.unit_id)?.number}</b><br>Leitura atual menor que a anterior.</div>`).join('')||'<div class="box"><b class="ok">✓ Nenhum alerta crítico.</b></div>'}
-init();
-</script></body></html>
+<section id="reports" class="screen">
+  <div class="section-head"><div><div class="eyebrow">GESTÃO</div><h2>Relatórios</h2></div><button class="secondary" onclick="showScreen('dashboard')">Início</button></div>
+  <div class="panel">
+    <h3>Dados deste mês</h3>
+    <div class="report-grid"><div>Leituras <b id="rDone">0</b></div><div>Consumo residencial <b id="rRes">0,00 m³</b></div><div>Principal <b id="rMain">0,00 m³</b></div><div>Alertas <b id="rAlerts">0</b></div></div>
+  </div>
+  <div class="panel actions">
+    <button class="primary" onclick="exportCSV()">⬇️ Exportar CSV</button>
+    <button class="secondary" onclick="printReport()">🖨️ Imprimir / PDF</button>
+    <button class="secondary" onclick="backupJSON()">💾 Fazer backup</button>
+    <button class="secondary" onclick="document.getElementById('restore').click()">♻️ Restaurar backup</button>
+    <input id="restore" type="file" accept=".json,application/json" hidden>
+  </div>
+  <div class="panel danger-panel">
+    <h3>Dados do aparelho</h3>
+    <p>As leituras ficam salvas neste aparelho. Faça um backup periódico para não perder os dados.</p>
+    <button class="danger" onclick="clearAll()">Apagar todos os dados deste aparelho</button>
+  </div>
+</section>
+</main>
+
+<nav class="bottom-nav">
+<button data-screen="dashboard" class="active" onclick="showScreen('dashboard')">⌂<span>Início</span></button>
+<button data-screen="readings" onclick="showScreen('readings')">▣<span>Leituras</span></button>
+<button data-screen="history" onclick="showScreen('history')">◷<span>Histórico</span></button>
+<button data-screen="reports" onclick="showScreen('reports')">▤<span>Relatórios</span></button>
+</nav>
+
+<div id="modal" class="modal">
+  <div class="modal-card">
+    <div class="modal-head"><div><div class="eyebrow" id="modalType"></div><h2 id="modalTitle"></h2></div><button class="icon-btn" onclick="closeModal()">✕</button></div>
+    <div class="form-grid">
+      <label>Data<input id="readDate" type="date"></label>
+      <label>Leitura anterior (m³)<input id="prev" type="number" step="0.01" readonly></label>
+      <label>Leitura atual (m³)<input id="current" type="number" step="0.01" min="0" inputmode="decimal"></label>
+      <label>Nº do hidrômetro<input id="meter" type="text" placeholder="Ex.: H-011"></label>
+      <label class="full">Foto do hidrômetro<input id="photo" type="file" accept="image/*" capture="environment"></label>
+      <label class="full">Observações<textarea id="notes" rows="3" placeholder="Opcional"></textarea></label>
+    </div>
+    <div id="photoPreview"></div>
+    <div class="calc" id="calc">Consumo: 0,00 m³</div>
+    <div id="ocrStatus" class="muted"></div>
+    <div class="modal-actions">
+      <button id="ocrBtn" class="secondary">🔢 Tentar leitura automática (OCR)</button>
+      <button class="primary" onclick="saveReading()">Salvar leitura</button>
+    </div>
+  </div>
+</div>
+<div id="toast" class="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

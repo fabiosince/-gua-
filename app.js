@@ -1,106 +1,103 @@
-const UNIT_NUMBERS=[...Array(8)].map((_,i)=>11+i).concat([...Array(8)].map((_,i)=>21+i),[...Array(8)].map((_,i)=>31+i),[...Array(8)].map((_,i)=>41+i),[...Array(8)].map((_,i)=>51+i),[...Array(8)].map((_,i)=>61+i),[...Array(8)].map((_,i)=>71+i),[...Array(8)].map((_,i)=>81+i),[...Array(8)].map((_,i)=>91+i),[...Array(8)].map((_,i)=>101+i)];
-const UNITS=UNIT_NUMBERS.map(n=>({id:String(n),number:String(n),type:'residencial'})).concat([{id:'principal',number:'UNIDADE PRINCIPAL',type:'principal'}]);
-let readings=JSON.parse(localStorage.getItem('agua_readings')||'{}');
-let selectedId=null, deferredPrompt=null;
+const UNIT_NUMBERS=["11", "12", "13", "14", "15", "16", "17", "18", "21", "22", "23", "24", "25", "26", "27", "28", "31", "32", "33", "34", "35", "36", "37", "38", "41", "42", "43", "44", "45", "46", "47", "48", "51", "52", "53", "54", "55", "56", "57", "58", "61", "62", "63", "64", "65", "66", "67", "68", "71", "72", "73", "74", "75", "76", "77", "78", "81", "82", "83", "84", "85", "86", "87", "88", "91", "92", "93", "94", "95", "96", "97", "98", "101", "102", "103", "104", "105", "106", "107", "108", "PRINCIPAL"];
+const KEY='agua_condominio_v2_data';
+let state=loadState(),selected=null,photoData=null;
 const $=id=>document.getElementById(id);
+const monthKey=()=>new Date().toISOString().slice(0,7);
 const today=()=>new Date().toISOString().slice(0,10);
-const monthKey=()=>today().slice(0,7);
-$('periodLabel').textContent=new Date().toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
-
-function saveDB(){localStorage.setItem('agua_readings',JSON.stringify(readings))}
-function current(id){return readings[id]?.[monthKey()]||null}
-function latestPrevious(id){
-  const arr=Object.values(readings[id]||{}).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
-  return arr.length?Number(arr[0].current||0):0;
-}
+const fmt=n=>Number(n||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+function loadState(){try{return JSON.parse(localStorage.getItem(KEY))||{readings:[]}}catch(e){return {readings:[]}}}
+function saveState(){localStorage.setItem(KEY,JSON.stringify(state))}
 function showScreen(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id===id));
-  document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('active',n.dataset.screen===id));
-  if(id==='leituras')renderUnits();
-  if(id==='alertas')renderAlerts();
-  updateDashboard();
+ document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id===id));
+ document.querySelectorAll('.bottom-nav button').forEach(b=>b.classList.toggle('active',b.dataset.screen===id));
+ if(id==='readings')renderUnits(); if(id==='history')renderHistory(); if(id==='reports')updateDashboard(); if(id==='alerts')renderAlerts();
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+function unitObj(id){return {id,number:id,type:id==='PRINCIPAL'?'principal':'residencial',meter:state.meters?.[id]||''}}
+function currentReading(id,period=monthKey()){return state.readings.find(r=>r.unitId===id&&r.period===period)}
+function previousReading(id){
+ const arr=state.readings.filter(r=>r.unitId===id).sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+ return arr[0]?.current||0;
+}
+function allUnits(){return UNIT_NUMBERS.map(unitObj)}
+function updateDashboard(){
+ const units=allUnits(), cur=units.map(u=>({u,r:currentReading(u.id)}));
+ const done=cur.filter(x=>x.r).length;
+ let res=0,main=0,alerts=0;
+ cur.forEach(x=>{if(!x.r)return;const c=Number(x.r.current)-Number(x.r.previous);if(c<0)alerts++;if(x.u.type==='principal')main+=Math.max(c,0);else res+=Math.max(c,0)});
+ $('done').textContent=done;$('donePct').textContent=Math.round(done/81*100)+'%';$('pending').textContent=81-done;$('alertCount').textContent=alerts;
+ $('resTotal').textContent=fmt(res)+' m³';$('mainTotal').textContent=fmt(main)+' m³';$('diffTotal').textContent=fmt(main-res)+' m³';
+ $('rDone').textContent=done;$('rRes').textContent=fmt(res)+' m³';$('rMain').textContent=fmt(main)+' m³';$('rAlerts').textContent=alerts;
 }
 function renderUnits(){
-  const q=($('search').value||'').toLowerCase();
-  const items=UNITS.filter(u=>`${u.number} ${u.id}`.toLowerCase().includes(q));
-  $('unitList').innerHTML=items.map(u=>{
-    const r=current(u.id), cons=r?Number(r.current)-Number(r.previous):null;
-    const abnormal=r&&cons<0;
-    return `<div class="unit">
-      <div class="unit-left"><div class="unit-title">${u.number}</div>
-      <div class="unit-meta">${u.type==='principal'?'Medição geral do condomínio':'Hidrômetro individual'}${r?.meterId?' • '+escapeHtml(r.meterId):''}</div>
-      <span class="status ${abnormal?'danger':r?'ok':'pending'}">${abnormal?'ERRO DE LEITURA':r?'LEITURA REALIZADA':'PENDENTE'}</span>
-      ${r?`<div class="unit-meta">Atual: ${fmt(r.current)} m³ • Consumo: ${fmt(cons)} m³</div>`:''}</div>
-      <button class="${r?'secondary':'primary'}" onclick="openModal('${u.id}')">${r?'Editar':'Ler'}</button>
-    </div>`;
-  }).join('');
+ const q=($('search').value||'').toLowerCase(), f=$('filter').value;
+ let list=allUnits().filter(u=>String(u.number).toLowerCase().includes(q)||String(u.meter).toLowerCase().includes(q));
+ list=list.filter(u=>{const r=currentReading(u.id),c=r?Number(r.current)-Number(r.previous):0;if(f==='pending')return !r;if(f==='done')return !!r&&c>=0;if(f==='alert')return !!r&&c<0;return true});
+ $('unitList').innerHTML=list.map(u=>{
+  const r=currentReading(u.id),c=r?Number(r.current)-Number(r.previous):0;
+  const cls=!r?'pending':c<0?'alert':'ok',status=!r?'PENDENTE':c<0?'REVISAR':'REALIZADA';
+  return `<div class="unit"><div><div class="unit-title">${u.number==='PRINCIPAL'?'UNIDADE PRINCIPAL':'UNIDADE '+u.number}</div><div class="unit-meta">${u.type==='principal'?'Medidor principal':'Hidrômetro individual'} ${u.meter?'• '+u.meter:''}</div><span class="status ${cls}">${status}</span>${r?`<div class="unit-meta">Atual: ${fmt(r.current)} m³ • Consumo: ${fmt(c)} m³</div>`:''}</div><button class="${r?'secondary':'primary'}" onclick="openModal('${u.id}')">${r?'Editar':'Ler'}</button></div>`;
+ }).join('')||'<div class="panel">Nenhuma unidade encontrada.</div>';
 }
-function fmt(n){return Number(n||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}
-function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 function openModal(id){
-  selectedId=id; const u=UNITS.find(x=>x.id===id), r=current(id);
-  $('modalType').textContent=u.type==='principal'?'MEDIÇÃO PRINCIPAL':'UNIDADE RESIDENCIAL';
-  $('modalTitle').textContent=u.number;
-  $('readDate').value=r?.date||today();
-  $('prevRead').value=r?.previous ?? latestPrevious(id);
-  $('currentRead').value=r?.current ?? '';
-  $('meterId').value=r?.meterId||'';
-  $('notes').value=r?.notes||'';
-  $('photo').value='';
-  $('photoPreview').innerHTML=r?.photo?`<img src="${r.photo}" alt="Foto do hidrômetro">`: '';
-  $('validation').textContent='';
-  $('modal').classList.add('show');
+ selected=unitObj(id);const r=currentReading(id);photoData=r?.photo||null;
+ $('modalType').textContent=selected.type==='principal'?'MEDIÇÃO PRINCIPAL':'HIDRÔMETRO INDIVIDUAL';
+ $('modalTitle').textContent=selected.number==='PRINCIPAL'?'Unidade Principal':'Unidade '+selected.number;
+ $('readDate').value=r?.date||today();$('prev').value=r?.previous??previousReading(id);$('current').value=r?.current??'';$('meter').value=r?.meter||selected.meter||'';$('notes').value=r?.notes||'';
+ $('photo').value='';$('photoPreview').innerHTML=photoData?`<img src="${photoData}" alt="Foto do hidrômetro">`:'';$('ocrStatus').textContent='';updateCalc();$('modal').classList.add('show');
 }
 function closeModal(){$('modal').classList.remove('show')}
-$('currentRead').addEventListener('input',validateRead);
-function validateRead(){
-  const prev=Number($('prevRead').value||0), cur=Number($('currentRead').value||0);
-  if(cur<prev){$('validation').textContent='⚠️ A leitura atual é menor que a anterior. Verifique o valor.';$('validation').style.color='#a52727'}
-  else {$('validation').textContent=`Consumo do período: ${fmt(cur-prev)} m³`;$('validation').style.color='#14733d'}
-}
-$('photo').addEventListener('change',e=>{
-  const f=e.target.files[0]; if(!f)return;
-  const reader=new FileReader();reader.onload=()=>{$('photoPreview').innerHTML=`<img src="${reader.result}" alt="Foto do hidrômetro">`;};reader.readAsDataURL(f);
-});
+function updateCalc(){const c=Number($('current').value||0)-Number($('prev').value||0);$('calc').textContent='Consumo: '+fmt(c)+' m³';$('calc').style.color=c<0?'#a32626':'#0b5cab'}
+$('current').addEventListener('input',updateCalc);
+$('photo').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const reader=new FileReader();reader.onload=()=>{photoData=reader.result;$('photoPreview').innerHTML=`<img src="${photoData}" alt="Foto do hidrômetro">`};reader.readAsDataURL(f)});
+$('ocrBtn').onclick=async()=>{
+ if(!photoData)return toast('Tire ou selecione uma foto primeiro.');
+ if(!window.Tesseract)return toast('OCR indisponível sem internet.');
+ $('ocrStatus').textContent='Lendo o visor…';
+ try{
+  const result=await Tesseract.recognize(photoData,'eng',{logger:m=>{if(m.status==='recognizing text')$('ocrStatus').textContent='OCR '+Math.round(m.progress*100)+'%'}});
+  const nums=(result.data.text.match(/\d+(?:[.,]\d+)?/g)||[]).sort((a,b)=>b.length-a.length);
+  if(nums.length){$('current').value=nums[0].replace(',','.');updateCalc();$('ocrStatus').textContent='Valor sugerido. Confira visualmente o hidrômetro antes de salvar.'}
+  else $('ocrStatus').textContent='Não consegui identificar o visor. Informe manualmente.';
+ }catch(e){$('ocrStatus').textContent='Não foi possível executar o OCR.'}
+};
 function saveReading(){
-  const date=$('readDate').value||today(), prev=Number($('prevRead').value||0), cur=Number($('currentRead').value);
-  if(!Number.isFinite(cur)||cur<0){toast('Informe uma leitura atual válida.');return}
-  const commit=()=>{
-    if(!readings[selectedId])readings[selectedId]={};
-    const photoEl=$('photoPreview').querySelector('img');
-    readings[selectedId][monthKey()]={date,previous:prev,current:cur,meterId:$('meterId').value.trim(),notes:$('notes').value.trim(),photo:photoEl?.src||null};
-    saveDB();closeModal();renderUnits();renderAlerts();updateDashboard();toast('Leitura salva com sucesso.');
-  };
-  if(cur<prev && !confirm('A leitura atual é menor que a anterior. Deseja salvar mesmo assim?'))return;
-  commit();
+ const prev=Number($('prev').value||0),cur=Number($('current').value),date=$('readDate').value||today();
+ if(!Number.isFinite(cur)||cur<0)return toast('Informe uma leitura válida.');
+ if(cur<prev&&!confirm('A leitura atual é menor que a anterior. Salvar mesmo assim?'))return;
+ state.meters=state.meters||{};state.meters[selected.id]=$('meter').value.trim();
+ const record={unitId:selected.id,period:monthKey(),date,previous:prev,current:cur,meter:$('meter').value.trim(),notes:$('notes').value.trim(),photo:photoData||null,savedAt:new Date().toISOString()};
+ const i=state.readings.findIndex(r=>r.unitId===selected.id&&r.period===monthKey());
+ if(i>=0)state.readings[i]=record;else state.readings.push(record);
+ saveState();closeModal();updateDashboard();renderUnits();toast('Leitura salva neste aparelho.');
 }
-function updateDashboard(){
-  let done=0,total=0, residential=0, main=0, alerts=0;
-  UNITS.forEach(u=>{const r=current(u.id);if(r){done++;const c=Number(r.current)-Number(r.previous);if(u.type==='principal')main+=Math.max(0,c);else residential+=Math.max(0,c);if(c<0)alerts++;}});
-  $('doneCount').textContent=done;$('pendingCount').textContent=81-done;$('donePct').textContent=Math.round(done/81*100)+'%';
-  $('totalResidential').textContent=fmt(residential)+' m³';$('mainConsumption').textContent=fmt(main)+' m³';
-  $('difference').textContent=fmt(main-residential)+' m³';$('alertCount').textContent=alerts;
+function renderHistory(){
+ const q=($('historySearch').value||'').toLowerCase();
+ const rows=state.readings.filter(r=>r.unitId.toLowerCase().includes(q)).sort((a,b)=>b.savedAt.localeCompare(a.savedAt));
+ $('historyList').innerHTML=rows.length?rows.map(r=>{
+ const c=Number(r.current)-Number(r.previous);return `<div class="history-item"><b>${r.unitId==='PRINCIPAL'?'UNIDADE PRINCIPAL':'UNIDADE '+r.unitId}</b><div class="unit-meta">${r.date} • anterior ${fmt(r.previous)} • atual ${fmt(r.current)}</div><div><strong>Consumo: ${fmt(c)} m³</strong>${r.notes?` • ${r.notes}`:''}</div></div>`;
+ }).join(''):'<div class="panel">Nenhuma leitura registrada ainda.</div>';
 }
 function renderAlerts(){
-  const out=[];
-  UNITS.forEach(u=>{
-    const r=current(u.id);if(!r)return;
-    const c=Number(r.current)-Number(r.previous);
-    if(c<0)out.push(`<div class="alert-item"><b>🔴 ${u.number}</b><br>Leitura atual menor que a anterior. Verificar registro.</div>`);
-    const history=Object.values(readings[u.id]||{}).map(x=>Number(x.current)-Number(x.previous)).filter(x=>x>=0);
-    if(history.length>=3){const avg=history.slice(-3).reduce((a,b)=>a+b,0)/Math.min(3,history.length);if(avg>0&&c>avg*1.8)out.push(`<div class="alert-item"><b>⚠️ ${u.number}</b><br>Consumo atual (${fmt(c)} m³) está acima do histórico recente (${fmt(avg)} m³).</div>`);}
-  });
-  $('alertsList').innerHTML=out.length?out.join(''):'<div class="panel"><b>✓ Nenhum alerta identificado.</b><p class="muted">O sistema analisará leituras anormais conforme o histórico for acumulado.</p></div>';
+ const rows=state.readings.filter(r=>Number(r.current)<Number(r.previous));
+ $('alertsList').innerHTML=rows.length?rows.map(r=>`<div class="history-item"><span class="status alert">REVISAR</span><h3>${r.unitId==='PRINCIPAL'?'Unidade Principal':'Unidade '+r.unitId}</h3><div class="unit-meta">Leitura atual ${fmt(r.current)} m³ menor que anterior ${fmt(r.previous)} m³.</div></div>`).join(''):'<div class="panel"><b>✓ Nenhum alerta crítico.</b><p class="muted">O sistema passará a gerar mais análises à medida que houver histórico.</p></div>';
 }
 function exportCSV(){
-  const rows=[['Unidade','Tipo','Data','Leitura anterior (m³)','Leitura atual (m³)','Consumo (m³)','Hidrômetro','Observações','Status']];
-  UNITS.forEach(u=>{const r=current(u.id);rows.push([u.number,u.type,r?.date||'',r?.previous??'',r?.current??'',r?(Number(r.current)-Number(r.previous)).toFixed(2):'',r?.meterId||'',r?.notes||'',r?'Realizada':'Pendente'])});
-  const csv=rows.map(row=>row.map(v=>`"${String(v).replaceAll('"','""')}"`).join(';')).join('\n');
-  const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`leituras-agua-${monthKey()}.csv`;a.click();URL.revokeObjectURL(a.href);
+ const rows=[['Unidade','Tipo','Período','Data','Anterior (m³)','Atual (m³)','Consumo (m³)','Hidrômetro','Observações']];
+ allUnits().forEach(u=>{const r=currentReading(u.id);if(r)rows.push([u.number,u.type,r.period,r.date,r.previous,r.current,(Number(r.current)-Number(r.previous)).toFixed(2),r.meter||'',r.notes||''])});
+ const csv=rows.map(row=>row.map(v=>`"${String(v).replaceAll('"','""')}"`).join(';')).join('\n');
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));a.download='leituras-agua-'+monthKey()+'.csv';a.click();
 }
-function backupJSON(){const blob=new Blob([JSON.stringify(readings,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='backup-leituras-agua.json';a.click();URL.revokeObjectURL(a.href)}
-function toast(msg){$('toast').textContent=msg;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2200)}
-window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;$('installBtn').hidden=false});
-$('installBtn').onclick=async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;$('installBtn').hidden=true};
-if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
-renderUnits();updateDashboard();
+function backupJSON(){
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(state,null,2)],{type:'application/json'}));a.download='backup-leituras-agua-'+today()+'.json';a.click();toast('Backup criado.');
+}
+$('restore').addEventListener('change',e=>{
+ const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const data=JSON.parse(rd.result);if(!Array.isArray(data.readings))throw Error();state=data;saveState();updateDashboard();renderUnits();toast('Backup restaurado.')}catch(x){toast('Arquivo de backup inválido.')}};rd.readAsText(f);
+});
+function clearAll(){if(confirm('Apagar TODAS as leituras deste aparelho? Esta ação não pode ser desfeita.')){localStorage.removeItem(KEY);state={readings:[]};updateDashboard();renderUnits();toast('Dados apagados.')}}
+function printReport(){showScreen('reports');setTimeout(()=>window.print(),100)}
+function toast(t){const el=$('toast');el.textContent=t;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2300)}
+$('period').textContent=new Date().toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+$('menuBtn').onclick=()=>showScreen('readings');
+updateDashboard();renderUnits();
+if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
