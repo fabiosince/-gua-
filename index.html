@@ -10,7 +10,7 @@
 </head>
 <body>
 <header class="topbar">
-  <div><div class="eyebrow">CONTROLE DE CONSUMO</div><h1>💧 Leitura de Água</h1><small>Condomínio Tangará Residencial • V2.16</small></div>
+  <div><div class="eyebrow">CONTROLE DE CONSUMO</div><h1>💧 Leitura de Água</h1><small>Condomínio Tangará Residencial • V2.17</small></div>
   <button id="menuBtn" class="icon-btn" aria-label="Menu">☰</button>
 </header>
 
@@ -42,7 +42,7 @@
   <div class="panel unit-panel">
     <div class="panel-head-row">
       <div>
-        <div class="panel-title">Painel das unidades • V2.16</div>
+        <div class="panel-title">Painel das unidades • V2.17</div>
         <div class="muted">Toque em uma unidade para registrar ou editar a leitura.</div>
       </div>
       <div class="panel-progress"><b id="panelDone">0/81</b><span>feitas</span></div>
@@ -103,7 +103,8 @@
 <section id="reports" class="screen">
   <div class="section-head"><div><div class="eyebrow">GESTÃO</div><h2>Relatório de leituras</h2></div><button class="secondary" onclick="showScreen('dashboard')">Início</button></div>
   <div class="panel report-cover">
-    <div class="eyebrow">RELATÓRIO MENSAL</div><h2>Leituras e consumo</h2><p class="muted">Período: <span id="reportPeriod"></span></p>
+    <div class="eyebrow">RELATÓRIO MENSAL</div><h2>Leituras e consumo</h2><p class="muted">Período: <span id="reportPeriod"></span> • <strong id="reportClosureStatus">ABERTO</strong></p>
+    <div id="closureMessage" class="closure-message"></div>
     <div class="report-grid"><div>Leituras <b id="rDone">0/81</b></div><div>Consumo residencial <b id="rRes">0,00 m³</b></div><div>Alertas de consumo <b id="rAlerts">0</b></div><div>Alertas críticos <b id="rCritical">0</b></div></div>
   </div>
   <div class="panel"><h3>Critério de consumo</h3><p class="muted">O consumo mensal é calculado pela diferença entre a leitura atual e a leitura anterior. Os alertas abaixo são objetivos e independem da média histórica.</p><div class="risk-table-wrap"><table class="risk-table"><thead><tr><th>Consumo no mês</th><th>Classificação</th><th>Ação</th></tr></thead><tbody><tr><td><strong>Até 25 m³</strong></td><td><span class="status ok">🟢 NORMAL</span></td><td>Sem alerta de consumo excessivo.</td></tr><tr><td><strong>Acima de 25 m³ até 50 m³</strong></td><td><span class="status warning">🟡 ALERTA MÉDIO</span></td><td>Recomenda-se verificar a unidade.</td></tr><tr><td><strong>Acima de 50 m³</strong></td><td><span class="status alert">🔴 ALERTA CRÍTICO</span></td><td>Verificação prioritária para possível consumo excessivo ou vazamento.</td></tr></tbody></table></div><div id="reportWarning"></div><div id="reportTable" class="monthly-table-wrap"></div></div>
@@ -117,6 +118,7 @@
       </div>
       <button class="primary export-main-btn" onclick="exportReport()">⬇️ Exportar relatório em PDF</button>
     </div>
+    <button id="closureBtn" class="secondary" onclick="toggleClosure()">🔒 Fechar mês</button>
     <button class="secondary" onclick="showScreen('history')">📚 Histórico detalhado</button>
     <button class="secondary" onclick="backupJSON()">💾 Fazer backup</button>
     <button class="secondary" onclick="document.getElementById('restore').click()">♻️ Restaurar backup</button>
