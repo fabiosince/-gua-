@@ -42,3 +42,10 @@ V2.4: adicionada evolução mensal dos últimos 6 períodos no relatório, com l
 
 
 V2.4 acrescenta capa de relatório mensal, identificação do período e impressão/PDF com layout otimizado.
+
+
+## V2.6
+- Relatório simplificado por unidade.
+- Colunas: leitura anterior, leitura atual, consumo e situação.
+- Indicador de consumo acima do normal para apoio à verificação de possível vazamento/consumo excessivo.
+- Exportação CSV do relatório.

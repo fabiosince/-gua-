@@ -101,32 +101,19 @@
 </section>
 
 <section id="reports" class="screen">
-  <div class="section-head"><div><div class="eyebrow">GESTÃO</div><h2>Relatórios</h2></div><button class="secondary" onclick="showScreen('dashboard')">Início</button></div>
+  <div class="section-head"><div><div class="eyebrow">GESTÃO</div><h2>Relatório de leituras</h2></div><button class="secondary" onclick="showScreen('dashboard')">Início</button></div>
   <div class="panel report-cover">
-    <div class="eyebrow">RELATÓRIO MENSAL</div><h2>Controle de Consumo de Água</h2><p class="muted">Condomínio • <span id="reportPeriod"></span></p>
-    <div class="report-cover-line"></div>
-    <h3>Fechamento — <span id="reportPeriod2"></span></h3><div class="closure-row"><span>Status do mês</span><b id="reportStatus" class="closure-status open">ABERTO</b><button id="closureBtn" class="primary" onclick="toggleClosure()">🔒 Fechar mês</button></div>
-    <div class="report-grid"><div>Leituras <b id="rDone">0</b></div><div>Consumo residencial <b id="rRes">0,00 m³</b></div><div>Principal <b id="rMain">0,00 m³</b></div><div>Alertas <b id="rAlerts">0</b></div></div>
+    <div class="eyebrow">RELATÓRIO MENSAL</div><h2>Leituras e consumo</h2><p class="muted">Período: <span id="reportPeriod"></span></p>
+    <div class="report-grid"><div>Leituras <b id="rDone">0/81</b></div><div>Consumo residencial <b id="rRes">0,00 m³</b></div><div>Consumo elevado <b id="rAlerts">0</b></div><div>Possível vazamento <b id="rCritical">0</b></div></div>
   </div>
-  <div class="panel">
-    <h3>Controle de perdas / diferença</h3>
-    <div class="report-grid"><div>Diferença <b id="lossM3">0,00 m³</b></div><div>Percentual <b id="lossPct">—</b></div></div>
-    <p class="muted">Diferença = consumo do medidor principal menos a soma das unidades. Uma diferença positiva pode indicar áreas comuns, variações de leitura ou perdas e deve ser analisada.</p>
-  </div>
-  <div class="panel chart-panel"><h3>Consumo residencial por unidade</h3><canvas id="consumptionChart" aria-label="Gráfico de consumo residencial"></canvas></div>
-  <div class="panel"><h3>Evolução mensal</h3><p class="muted">Comparação dos últimos 6 períodos com dados registrados neste aparelho.</p><div id="monthlySummary"></div></div>
+  <div class="panel"><h3>Lista de unidades</h3><p class="muted">O consumo é calculado pela diferença entre a leitura atual e a leitura anterior. Os alertas comparam o consumo com até os 3 períodos anteriores da própria unidade e indicam anomalia, não confirmação de vazamento.</p><div id="reportWarning"></div><div id="reportTable" class="monthly-table-wrap"></div></div>
   <div class="panel actions">
-    <button class="primary" onclick="exportCSV()">⬇️ Exportar CSV</button>
+    <button class="primary" onclick="exportCSV()">⬇️ Exportar relatório CSV</button>
     <button class="secondary" onclick="printReport()">🖨️ Imprimir / PDF</button>
     <button class="secondary" onclick="showScreen('history')">📚 Histórico detalhado</button>
     <button class="secondary" onclick="backupJSON()">💾 Fazer backup</button>
     <button class="secondary" onclick="document.getElementById('restore').click()">♻️ Restaurar backup</button>
     <input id="restore" type="file" accept=".json,application/json" hidden>
-  </div>
-  <div class="panel danger-panel">
-    <h3>Dados do aparelho</h3>
-    <p>As leituras ficam salvas neste aparelho. Faça um backup periódico para não perder os dados.</p>
-    <button class="danger" onclick="clearAll()">Apagar todos os dados deste aparelho</button>
   </div>
 </section>
 </main>
