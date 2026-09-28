@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0b5cab">
 <link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="styles.css">
-<title>Tangará Residencial • Controle de Água V2.25</title>
+<title>Tangará Residencial • Controle de Água V2.26</title>
 </head>
 <body>
 <header class="topbar">
@@ -162,10 +162,12 @@
     </div>
     <div id="photoPreview"></div>
     <div class="calc" id="calc">Consumo: 0,00 m³</div>
+    <div id="modalRisk" class="reading-risk ok"><b>🟢 Pronto para registrar</b><small>Confira a leitura anterior e informe a leitura atual.</small></div>
     <div id="ocrStatus" class="muted"></div>
-    <div class="modal-actions">
-      <button id="ocrBtn" class="secondary">🔢 Tentar leitura automática (OCR)</button>
-      <button id="saveReadingBtn" class="primary" onclick="saveReading()">Salvar leitura</button>
+    <div class="modal-actions reading-actions">
+      <button id="ocrBtn" class="secondary">🔢 Ler visor com OCR</button>
+      <button id="saveReadingBtn" class="primary" onclick="saveReading()">💾 Salvar leitura</button>
+      <button id="skipGuidedBtn" class="secondary guided-only" type="button" onclick="skipGuidedUnit()">⏭️ Pular esta unidade</button>
     </div>
   </div>
 </div>

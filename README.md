@@ -1,6 +1,6 @@
-# Tangará Residencial — Controle de Água V2.25
+# Tangará Residencial — Controle de Água V2.26
 
-V2.25 moderniza a interface para deixar a operação mais visual, rápida e intuitiva no celular.
+V2.26 moderniza a interface para deixar a operação mais visual, rápida e intuitiva no celular.
 
 - Ícones visuais e criativos nas principais ações
 - Cards com indicadores visuais para realizadas, pendentes e alertas
