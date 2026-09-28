@@ -1,6 +1,6 @@
-# Tangará Residencial — Controle de Água V2.29.3
+# Tangará Residencial — Controle de Água V2.29.4
 
-V2.29.3 moderniza a interface para deixar a operação mais visual, rápida e intuitiva no celular.
+V2.29.4 moderniza a interface para deixar a operação mais visual, rápida e intuitiva no celular.
 
 - Ícones visuais e criativos nas principais ações
 - Cards com indicadores visuais para realizadas, pendentes e alertas
@@ -13,5 +13,9 @@ V2.29.3 moderniza a interface para deixar a operação mais visual, rápida e in
 
 
 
-## V2.29.3 — Identidade visual corrigida
+## V2.29.4 — Identidade visual corrigida
 A identidade Tangará foi integrada sem alterar a escala, largura ou proporção da interface da V2.28. O cabeçalho usa um ícone compacto e os elementos de marca permanecem decorativos, sem acesso à câmera.
+
+
+## V2.29.4 — Navegação de unidades corrigida
+Os cartões de unidades da tela Início e da tela Leituras agora usam navegação por evento para abrir a área de leitura com segurança. Ao tocar em uma unidade, o aplicativo abre a tela Leituras e, em seguida, o formulário daquela unidade.

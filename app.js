@@ -1,6 +1,6 @@
 const UNIT_NUMBERS=["11","12","13","14","15","16","17","18","21","22","23","24","25","26","27","28","31","32","33","34","35","36","37","38","41","42","43","44","45","46","47","48","51","52","53","54","55","56","57","58","61","62","63","64","65","66","67","68","71","72","73","74","75","76","77","78","81","82","83","84","85","86","87","88","91","92","93","94","95","96","97","98","101","102","103","104","105","106","107","108","PRINCIPAL"];
 const KEY='agua_condominio_v2_data';
-const APP_VERSION='V2.29.3';
+const APP_VERSION='V2.29.4';
 const $=id=>document.getElementById(id);
 const monthKey=(d=new Date())=>{const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0');return `${y}-${m}`};
 let state=loadState(),selected=null,selectedPeriod=monthKey();
@@ -59,6 +59,12 @@ function setMapFilter(filter){
   document.querySelectorAll('[data-map-filter]').forEach(b=>b.classList.toggle('active',b.dataset.mapFilter===filter));
   renderUnitMap();
 }
+function openUnitReading(id){
+  if(!id)return;
+  showScreen('readings');
+  setTimeout(()=>openModal(id),60);
+}
+
 function renderUnitMap(){
   const grid=$('unitMap');if(!grid)return;
   const q=($('mapSearch')?.value||'').trim().toLowerCase();
@@ -76,7 +82,7 @@ function renderUnitMap(){
     const r=currentReading(u.id),status=unitMapStatus(u), c=r?consumption(r):null;
     const icon=status==='done'?'🟢':status==='alert'?'🔴':'🟡';
     const label=!r?'Pendente':`${fmt(c)} m³`;
-    return `<button class="unit-map-card ${status}" onclick="openModal('${u.id}')"><span class="unit-map-icon">${icon}</span><strong>${u.number==='PRINCIPAL'?'PRINCIPAL':'${u.number}'}</strong><small>${label}</small>${u.meter?`<em>${u.meter}</em>`:''}</button>`;
+    return `<button class="unit-map-card ${status}" data-open-unit="${u.id}"><span class="unit-map-icon">${icon}</span><strong>${u.number==='PRINCIPAL'?'PRINCIPAL':'${u.number}'}</strong><small>${label}</small>${u.meter?`<em>${u.meter}</em>`:''}</button>`;
   }).join('') || '<div class="empty">Nenhuma unidade encontrada.</div>';
 }
 function renderUnitPanel(){
@@ -97,14 +103,14 @@ function renderUnitPanel(){
     const label=u.number==='PRINCIPAL'?'PRINCIPAL':u.number;
     const icon=status==='done'?'✓':status==='critical'?'!':status==='warning'?'⚠':'•';
     const title=status==='done'?`Normal • ${fmt(c)} m³`:status==='warning'?`Suspeita • ${fmt(c)} m³ • ${st.reason}`:status==='critical'?`Acima do normal • ${fmt(c)} m³ • ${st.reason}`:'Leitura pendente';
-    return `<button class="unit-panel-item ${status}" title="${title}" onclick="openModal('${u.id}')"><span class="unit-panel-number">${label}</span><span class="unit-panel-status">${icon}</span></button>`;
+    return `<button class="unit-panel-item ${status}" title="${title}" data-open-unit="${u.id}"><span class="unit-panel-number">${label}</span><span class="unit-panel-status">${icon}</span></button>`;
   }).join('') || '<div class="panel" style="grid-column:1/-1">Nenhuma unidade encontrada para esta busca.</div>';
   $('panelDone').textContent=`${done}/${all.length}`;
   const summary=$('panelRiskSummary');
   if(summary)summary.innerHTML=`<span class="risk-mini normal">● Normal</span><span class="risk-mini warning">⚠ Suspeita: ${warning}</span><span class="risk-mini critical">! Acima do normal: ${critical}</span>`;
 }
 
-function renderUnits(){const q=($('search').value||'').toLowerCase(),f=$('filter').value;let list=allUnits().filter(u=>String(u.number).toLowerCase().includes(q)||String(u.meter).toLowerCase().includes(q));list=list.filter(u=>{const r=currentReading(u.id),c=r?Number(r.current)-Number(r.previous):0,st=r?consumptionStatus(u.id,c,selectedPeriod):{level:'pending'};if(f==='pending')return !r;if(f==='done')return !!r&&st.level==='normal';if(f==='warning')return !!r&&st.level==='warning';if(f==='critical')return !!r&&st.level==='critical';if(f==='alert')return !!r&&(st.level==='warning'||st.level==='critical'||st.level==='negative');return true});$('unitList').innerHTML=list.map(u=>{const r=currentReading(u.id),c=r?Number(r.current)-Number(r.previous):0,st=r?consumptionStatus(u.id,c,selectedPeriod):{level:'pending',label:'PENDENTE',reason:''};const cls=!r?'pending':st.level==='critical'?'alert':st.level==='warning'?'warning':'ok';const status=!r?'PENDENTE':st.label;return `<div class="unit"><div><div class="unit-title">${u.number==='PRINCIPAL'?'UNIDADE PRINCIPAL':'UNIDADE '+u.number}</div><div class="unit-meta">${u.type==='principal'?'Medidor principal':'Hidrômetro individual'} ${u.meter?'• '+u.meter:''}</div><span class="status ${cls}">${status}</span>${r?`<div class="unit-meta">Atual: ${fmt(r.current)} m³ • Consumo: ${fmt(c)} m³${st.level!=='normal'?` • ${st.reason}`:''}</div>`:''}</div><button class="${r?'secondary':'primary'}" onclick="openModal('${u.id}')">${r?'Editar':'Ler'}</button></div>`}).join('')||'<div class="panel">Nenhuma unidade encontrada.</div>'}
+function renderUnits(){const q=($('search').value||'').toLowerCase(),f=$('filter').value;let list=allUnits().filter(u=>String(u.number).toLowerCase().includes(q)||String(u.meter).toLowerCase().includes(q));list=list.filter(u=>{const r=currentReading(u.id),c=r?Number(r.current)-Number(r.previous):0,st=r?consumptionStatus(u.id,c,selectedPeriod):{level:'pending'};if(f==='pending')return !r;if(f==='done')return !!r&&st.level==='normal';if(f==='warning')return !!r&&st.level==='warning';if(f==='critical')return !!r&&st.level==='critical';if(f==='alert')return !!r&&(st.level==='warning'||st.level==='critical'||st.level==='negative');return true});$('unitList').innerHTML=list.map(u=>{const r=currentReading(u.id),c=r?Number(r.current)-Number(r.previous):0,st=r?consumptionStatus(u.id,c,selectedPeriod):{level:'pending',label:'PENDENTE',reason:''};const cls=!r?'pending':st.level==='critical'?'alert':st.level==='warning'?'warning':'ok';const status=!r?'PENDENTE':st.label;return `<div class="unit"><div><div class="unit-title">${u.number==='PRINCIPAL'?'UNIDADE PRINCIPAL':'UNIDADE '+u.number}</div><div class="unit-meta">${u.type==='principal'?'Medidor principal':'Hidrômetro individual'} ${u.meter?'• '+u.meter:''}</div><span class="status ${cls}">${status}</span>${r?`<div class="unit-meta">Atual: ${fmt(r.current)} m³ • Consumo: ${fmt(c)} m³${st.level!=='normal'?` • ${st.reason}`:''}</div>`:''}</div><button class="${r?'secondary':'primary'}" type="button" data-open-unit="${u.id}">${r?'Editar':'Ler'}</button></div>`}).join('')||'<div class="panel">Nenhuma unidade encontrada.</div>'}
 
 function adjustCurrent(delta){const el=$('current');if(!el)return;const n=Number(el.value||0);el.value=(Math.max(0,(Number.isFinite(n)?n:0)+delta)).toFixed(2);updateCalc();updateModalRisk();el.focus();el.select()}
 function prepareCurrentField(){const el=$('current');if(!el)return;setTimeout(()=>{el.focus();el.select()},120)}
@@ -210,6 +216,15 @@ function printReport(){
   if(w){w.document.open();w.document.write(html);w.document.close();toast('PDF preparado somente com as leituras.');return}
   renderPrintReport();showScreen('reports');setTimeout(()=>{window.print();toast('PDF preparado somente com as leituras.')},100);
 }
+document.addEventListener('click',e=>{
+  const target=e.target.closest('[data-open-unit]');
+  if(target){
+    e.preventDefault();
+    e.stopPropagation();
+    openUnitReading(target.dataset.openUnit);
+  }
+});
+
 function toast(t){const el=$('toast');el.textContent=t;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2300)}
 $('periodPicker').value=selectedPeriod;$('period').textContent=periodLabel(selectedPeriod);renderReferences();updateDashboard();renderUnitPanel();renderUnits();renderAlerts();renderReports();renderUnitMap();
 if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
