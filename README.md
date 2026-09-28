@@ -1,4 +1,4 @@
-# Tangará Residencial — Controle de Água V2.29.12
+# Tangará Residencial — Controle de Água V2.29.13
 
 V2.29.10 moderniza a interface para deixar a operação mais visual, rápida e intuitiva no celular.
 
@@ -43,8 +43,8 @@ V2.29.10: removido o Mapa das Unidades e sua navegação; fluxo principal perman
 Navegação inferior com ícones maiores, maior contraste e destaque mais claro do item ativo, preservando a escala geral do aplicativo.
 
 
-## V2.29.12
+## V2.29.13
 - Substituídos os glifos pouco visíveis da navegação inferior por ícones SVG vetoriais reais.
 - Ícones de Início, Leituras, Relatórios, Alertas e Histórico agora têm traço consistente, área visual maior e destaque claro no item ativo.
 - Mantida a escala e o dimensionamento geral das telas.
-- Cache atualizado para V2.29.12.
+- Cache atualizado para V2.29.13.
