@@ -71,8 +71,7 @@
 
 .photo-caption{font-size:11px;color:#718096;margin-top:5px;text-align:center}.form-grid label.full small{display:block;margin-top:5px}
 
-/* V2.28 — mapa visual das 81 unidades */
-.map-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}.map-stat{padding:14px;border:1px solid var(--border);border-radius:18px;background:var(--card);display:flex;flex-direction:column;align-items:center;gap:3px}.map-stat span{font-size:22px}.map-stat b{font-size:24px}.map-stat small{color:var(--muted)}.map-tools{display:flex;gap:10px;flex-direction:column}.map-filters{display:flex;gap:8px;overflow:auto;padding-bottom:3px}.unit-map-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:16px}.unit-map-card{border:1px solid var(--border);border-radius:16px;background:var(--card);padding:11px 7px;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:92px;cursor:pointer}.unit-map-card strong{font-size:16px}.unit-map-card small{font-weight:700}.unit-map-card em{font-size:10px;color:var(--muted);font-style:normal;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}.unit-map-card.pending{border-style:dashed}.unit-map-card.alert{box-shadow:0 0 0 2px rgba(220,60,60,.08)}.unit-map-icon{font-size:18px}.map-stat.alert b{color:#c62828}.map-stat.pending b{color:#a66a00}.map-stat.done b{color:#278447}@media(max-width:520px){.unit-map-grid{grid-template-columns:repeat(4,1fr);gap:7px}.unit-map-card{min-height:82px;padding:9px 4px}.unit-map-card strong{font-size:14px}.unit-map-card small{font-size:11px}.unit-map-card em{display:none}}
+@media(max-width:520px){.unit-map-grid{grid-template-columns:repeat(4,1fr);gap:7px}.unit-map-card{min-height:82px;padding:9px 4px}.unit-map-card strong{font-size:14px}.unit-map-card small{font-size:11px}.unit-map-card em{display:none}}
 
 
 /* V2.29.2 — identidade Tangará sem alterar a escala do aplicativo */

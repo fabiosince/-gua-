@@ -38,81 +38,18 @@ function toggleClosure(){
 function periodLabel(p){const [y,m]=p.split('-');return new Date(Number(y),Number(m)-1,1).toLocaleDateString('pt-BR',{month:'long',year:'numeric'})}
 function setUnitFilter(value){$('filter').value=value;document.querySelectorAll('.filter-chip').forEach(b=>b.classList.toggle('active',b.dataset.filter===value));renderUnits();}
 let guidedMode=false;
-let mapFilter='all';
 function startGuidedReading(){guidedMode=true;showScreen('readings');renderUnits();setTimeout(()=>openNextPending(),80);toast('Modo de leitura iniciado. Após salvar, a próxima pendente será aberta.');}
 function updateModalProgress(){const total=allUnits().length, done=allUnits().filter(u=>!!currentReading(u.id)).length;const pos=selected?allUnits().findIndex(u=>u.id===selected.id)+1:0;if($('modalProgress'))$('modalProgress').textContent=pos?`Unidade ${pos} de ${total} • ${done}/${total} concluídas`:'';}
 function openNextPending(){const search=document.getElementById('search');if(search)search.value='';const filter=document.getElementById('filter');if(filter)filter.value='all';const u=allUnits().find(x=>!currentReading(x.id));if(!u){guidedMode=false;return toast('Todas as unidades deste mês já possuem leitura.');}showScreen('readings');setTimeout(()=>openModal(u.id),40);}
-function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id===id));document.querySelectorAll('.bottom-nav button').forEach(b=>b.classList.toggle('active',b.dataset.screen===id));if(id==='dashboard')renderUnitPanel();if(id==='readings')renderUnits();if(id==='history')renderHistory();if(id==='reports')renderReports();if(id==='alerts')renderAlerts();if(id==='references')renderReferences();if(id==='map')renderUnitMap();window.scrollTo({top:0,behavior:'smooth'})}
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id===id));document.querySelectorAll('.bottom-nav button').forEach(b=>b.classList.toggle('active',b.dataset.screen===id));if(id==='dashboard')renderUnitPanel();if(id==='readings')renderUnits();if(id==='history')renderHistory();if(id==='reports')renderReports();if(id==='alerts')renderAlerts();if(id==='references')renderReferences();window.scrollTo({top:0,behavior:'smooth'})}
 function unitObj(id){return {id,number:id,type:id==='PRINCIPAL'?'principal':'residencial',meter:state.meters?.[id]||''}}
 function currentReading(id,period=selectedPeriod){return state.readings.find(r=>r.unitId===id&&r.period===period)}
 function previousReading(id,period=selectedPeriod){const arr=state.readings.filter(r=>r.unitId===id&&r.period<period).sort((a,b)=>b.period.localeCompare(a.period)||String(b.date).localeCompare(String(a.date)));if(arr[0]?.current!==undefined&&arr[0]?.current!==null)return Number(arr[0].current);const ref=state.references?.[period]?.[id];if(ref!==undefined&&ref!==null&&ref!=='')return Number(ref);return 0}
 function allUnits(){return UNIT_NUMBERS.map(unitObj)}
-function setPeriod(v){if(!/^\d{4}-\d{2}$/.test(v))return;selectedPeriod=v;$('periodPicker').value=v;$('period').textContent=periodLabel(v);updateDashboard();renderUnitPanel();renderUnits();renderAlerts();renderReports();renderUnitMap();renderHistory()}
+function setPeriod(v){if(!/^\d{4}-\d{2}$/.test(v))return;selectedPeriod=v;$('periodPicker').value=v;$('period').textContent=periodLabel(v);updateDashboard();renderUnitPanel();renderUnits();renderAlerts();renderReports();renderHistory()}
 function shiftPeriod(delta){const [y,m]=selectedPeriod.split('-').map(Number);const d=new Date(y,m-1+delta,1);setPeriod(monthKey(d))}
 function updateDashboard(){const units=allUnits(),cur=units.map(u=>({u,r:currentReading(u.id)}));const done=cur.filter(x=>x.r).length;let res=0,main=0,alerts=0;cur.forEach(x=>{if(!x.r)return;const c=Number(x.r.current)-Number(x.r.previous);const st=consumptionStatus(x.u.id,c,selectedPeriod);if(st.level==='warning'||st.level==='critical'||st.level==='negative')alerts++;if(x.u.type==='principal')main+=Math.max(c,0);else res+=Math.max(c,0)});$('done').textContent=done;$('donePct').textContent=Math.round(done/81*100)+'%';$('pending').textContent=81-done;$('alertCount').textContent=alerts;$('resTotal').textContent=fmt(res)+' m³';$('mainTotal').textContent=fmt(main)+' m³';$('diffTotal').textContent=fmt(main-res)+' m³'}
 function clearDashboardUnitSearch(){const input=$('dashboardUnitSearch');if(input){input.value='';renderUnitPanel();input.focus()}}
-function unitMapStatus(u){
-  const r=currentReading(u.id);
-  if(!r)return 'pending';
-  const c=consumption(r);
-  return c>50?'alert':(c>25?'alert':'done');
-}
-function setMapFilter(filter){
-  mapFilter=filter;
-  document.querySelectorAll('[data-map-filter]').forEach(b=>b.classList.toggle('active',b.dataset.mapFilter===filter));
-  renderUnitMap();
-}
-function openUnitReading(id){
-  if(!id)return;
-  showScreen('readings');
-  setTimeout(()=>openModal(id),60);
-}
-
-function renderUnitMap(){
-  const grid=$('unitMap');if(!grid)return;
-  const q=($('mapSearch')?.value||'').trim().toLowerCase();
-  const units=allUnits().filter(u=>{
-    const r=currentReading(u.id), status=unitMapStatus(u);
-    const hay=`${u.number} ${u.meter||''} ${u.id}`.toLowerCase();
-    const match=!q||hay.includes(q);
-    return match && (mapFilter==='all'||(mapFilter==='pending'&&!r)||(mapFilter==='done'&&status==='done')||(mapFilter==='alert'&&status==='alert'));
-  });
-  const counts={done:0,pending:0,alert:0};allUnits().forEach(u=>counts[unitMapStatus(u)]++);
-  if($('mapDone'))$('mapDone').textContent=counts.done;
-  if($('mapPending'))$('mapPending').textContent=counts.pending;
-  if($('mapAlert'))$('mapAlert').textContent=counts.alert;
-  grid.innerHTML=units.map(u=>{
-    const r=currentReading(u.id),status=unitMapStatus(u), c=r?consumption(r):null;
-    const icon=status==='done'?'🟢':status==='alert'?'🔴':'🟡';
-    const label=!r?'Pendente':`${fmt(c)} m³`;
-    return `<button class="unit-map-card ${status}" data-open-unit="${u.id}"><span class="unit-map-icon">${icon}</span><strong>${u.number==='PRINCIPAL'?'PRINCIPAL':'${u.number}'}</strong><small>${label}</small>${u.meter?`<em>${u.meter}</em>`:''}</button>`;
-  }).join('') || '<div class="empty">Nenhuma unidade encontrada.</div>';
-}
-function renderUnitPanel(){
-  const el=$('unitPanel');
-  if(!el)return;
-  const q=($('dashboardUnitSearch')?.value||'').trim().toLowerCase();
-  const all=allUnits();
-  const units=q?all.filter(u=>{const label=u.number==='PRINCIPAL'?'principal unidade principal':`unidade ${u.number}`;return label.toLowerCase().includes(q)||String(u.meter||'').toLowerCase().includes(q)}):all;
-  let done=0, warning=0, critical=0;
-  el.innerHTML=units.map(u=>{
-    const r=currentReading(u.id);
-    const c=r?Number(r.current)-Number(r.previous):0;
-    const st=r?consumptionStatus(u.id,c,selectedPeriod):{level:'pending',label:'Leitura pendente',reason:''};
-    const status=!r?'pending':st.level==='critical'?'critical':st.level==='warning'?'warning':st.level==='negative'?'critical':'done';
-    if(r)done++;
-    if(status==='warning')warning++;
-    if(status==='critical')critical++;
-    const label=u.number==='PRINCIPAL'?'PRINCIPAL':u.number;
-    const icon=status==='done'?'✓':status==='critical'?'!':status==='warning'?'⚠':'•';
-    const title=status==='done'?`Normal • ${fmt(c)} m³`:status==='warning'?`Suspeita • ${fmt(c)} m³ • ${st.reason}`:status==='critical'?`Acima do normal • ${fmt(c)} m³ • ${st.reason}`:'Leitura pendente';
-    return `<button class="unit-panel-item ${status}" title="${title}" data-open-unit="${u.id}"><span class="unit-panel-number">${label}</span><span class="unit-panel-status">${icon}</span></button>`;
-  }).join('') || '<div class="panel" style="grid-column:1/-1">Nenhuma unidade encontrada para esta busca.</div>';
-  $('panelDone').textContent=`${done}/${all.length}`;
-  const summary=$('panelRiskSummary');
-  if(summary)summary.innerHTML=`<span class="risk-mini normal">● Normal</span><span class="risk-mini warning">⚠ Suspeita: ${warning}</span><span class="risk-mini critical">! Acima do normal: ${critical}</span>`;
-}
-
 function renderUnits(){const q=($('search').value||'').toLowerCase(),f=$('filter').value;let list=allUnits().filter(u=>String(u.number).toLowerCase().includes(q)||String(u.meter).toLowerCase().includes(q));list=list.filter(u=>{const r=currentReading(u.id),c=r?Number(r.current)-Number(r.previous):0,st=r?consumptionStatus(u.id,c,selectedPeriod):{level:'pending'};if(f==='pending')return !r;if(f==='done')return !!r&&st.level==='normal';if(f==='warning')return !!r&&st.level==='warning';if(f==='critical')return !!r&&st.level==='critical';if(f==='alert')return !!r&&(st.level==='warning'||st.level==='critical'||st.level==='negative');return true});$('unitList').innerHTML=list.map(u=>{const r=currentReading(u.id),c=r?Number(r.current)-Number(r.previous):0,st=r?consumptionStatus(u.id,c,selectedPeriod):{level:'pending',label:'PENDENTE',reason:''};const cls=!r?'pending':st.level==='critical'?'alert':st.level==='warning'?'warning':'ok';const status=!r?'PENDENTE':st.label;return `<div class="unit"><div><div class="unit-title">${u.number==='PRINCIPAL'?'UNIDADE PRINCIPAL':'UNIDADE '+u.number}</div><div class="unit-meta">${u.type==='principal'?'Medidor principal':'Hidrômetro individual'} ${u.meter?'• '+u.meter:''}</div><span class="status ${cls}">${status}</span>${r?`<div class="unit-meta">Atual: ${fmt(r.current)} m³ • Consumo: ${fmt(c)} m³${st.level!=='normal'?` • ${st.reason}`:''}</div>`:''}</div><button class="${r?'secondary':'primary'}" type="button" data-open-unit="${u.id}">${r?'Editar':'Ler'}</button></div>`}).join('')||'<div class="panel">Nenhuma unidade encontrada.</div>'}
 
 function adjustCurrent(delta){const el=$('current');if(!el)return;const n=parseReading(el.value);el.value=fmtInput(Math.max(0,(Number.isFinite(n)?n:0)+delta));updateCalc();updateModalRisk();el.focus();el.select()}
@@ -125,12 +62,12 @@ if($('current'))$('current').addEventListener('input',()=>{updateCalc();updateMo
 if($('current'))$('current').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();saveReading()}});
 document.addEventListener('keydown',e=>{if(!$('modal')?.classList.contains('show'))return;if(e.key==='Escape')closeModal()});if($('prev'))$('prev').addEventListener('input',()=>{updateCalc();updateModalRisk()});
 function updateSaveButton(){const b=$('saveReadingBtn');if(!b)return;b.innerHTML='💾 Salvar e próxima →';b.classList.add('guided-save')}
-function saveReading(){if(isClosed()){if(!confirm('Este mês está fechado. Reabrir para editar esta leitura?'))return;state.closures=state.closures||{};delete state.closures[selectedPeriod];saveState();}const prev=previousReading(selected.id,selectedPeriod),cur=parseReading($('current').value),date=$('readDate').value||today();if(!Number.isFinite(cur)||cur<0)return toast('Informe uma leitura válida.');if(cur<prev&&!confirm('A leitura atual é menor que a anterior. Salvar mesmo assim?'))return;state.meters=state.meters||{};state.meters[selected.id]=$('meter').value.trim();const record={unitId:selected.id,period:selectedPeriod,date,previous:prev,current:cur,meter:$('meter').value.trim(),notes:$('notes').value.trim(),savedAt:new Date().toISOString()};const i=state.readings.findIndex(r=>r.unitId===selected.id&&r.period===selectedPeriod);if(i>=0)state.readings[i]=record;else state.readings.push(record);saveState();closeModal();updateDashboard();renderUnitPanel();renderUnits();renderAlerts();renderReports();renderUnitMap();const next=allUnits().find(u=>!currentReading(u.id));if(next){guidedMode=true;toast('Leitura salva. Abrindo a próxima unidade…');setTimeout(()=>openModal(next.id),260)}else{guidedMode=false;toast('🎉 Todas as 81 leituras deste mês foram concluídas.')}}
+function saveReading(){if(isClosed()){if(!confirm('Este mês está fechado. Reabrir para editar esta leitura?'))return;state.closures=state.closures||{};delete state.closures[selectedPeriod];saveState();}const prev=previousReading(selected.id,selectedPeriod),cur=parseReading($('current').value),date=$('readDate').value||today();if(!Number.isFinite(cur)||cur<0)return toast('Informe uma leitura válida.');if(cur<prev&&!confirm('A leitura atual é menor que a anterior. Salvar mesmo assim?'))return;state.meters=state.meters||{};state.meters[selected.id]=$('meter').value.trim();const record={unitId:selected.id,period:selectedPeriod,date,previous:prev,current:cur,meter:$('meter').value.trim(),notes:$('notes').value.trim(),savedAt:new Date().toISOString()};const i=state.readings.findIndex(r=>r.unitId===selected.id&&r.period===selectedPeriod);if(i>=0)state.readings[i]=record;else state.readings.push(record);saveState();closeModal();updateDashboard();renderUnitPanel();renderUnits();renderAlerts();renderReports();const next=allUnits().find(u=>!currentReading(u.id));if(next){guidedMode=true;toast('Leitura salva. Abrindo a próxima unidade…');setTimeout(()=>openModal(next.id),260)}else{guidedMode=false;toast('🎉 Todas as 81 leituras deste mês foram concluídas.')}}
 
 function referencePeriod(period=selectedPeriod){const [y,m]=period.split('-').map(Number);return monthKey(new Date(y,m-2,1))}
 function renderReferences(){const refPeriod=referencePeriod();$('referencePeriodLabel').textContent=periodLabel(refPeriod);$('targetPeriodLabel').textContent=periodLabel(selectedPeriod);const box=state.references?.[selectedPeriod]||{};const priorReadings={};state.readings.filter(r=>r.period===refPeriod).forEach(r=>priorReadings[r.unitId]=r.current);$('referenceGrid').innerHTML=allUnits().map(u=>{const v=box[u.id]??priorReadings[u.id]??'';const label=u.number==='PRINCIPAL'?'Principal':u.number;return `<label class="reference-cell"><span>${label}</span><input class="reference-input" data-unit="${u.id}" type="text" inputmode="decimal" value="${v!=='' ? fmtInput(v) : ''}" placeholder="0,000"></label>`}).join('');$('referenceCount').textContent=`${Object.values(box).filter(v=>v!==''&&v!==null&&v!==undefined).length}/81 preenchidas`}
-function saveReferences(){if(isClosed()){toast('O mês está fechado. Reabra o mês para alterar referências.');return}state.references=state.references||{};state.references[selectedPeriod]=state.references[selectedPeriod]||{};const refs=state.references[selectedPeriod];document.querySelectorAll('.reference-input').forEach(input=>{const id=input.dataset.unit;const raw=input.value.trim();if(raw==='')delete refs[id];else{const n=parseReading(raw);if(Number.isFinite(n)&&n>=0)refs[id]=n}});state.readings.forEach(r=>{if(r.period===selectedPeriod){const arr=state.readings.filter(x=>x.unitId===r.unitId&&x.period<selectedPeriod).sort((a,b)=>b.period.localeCompare(a.period));if(arr[0]?.current!==undefined)r.previous=Number(arr[0].current);else if(Object.prototype.hasOwnProperty.call(refs,r.unitId))r.previous=Number(refs[r.unitId]);}});saveState();renderReferences();updateDashboard();renderUnitPanel();renderUnits();renderAlerts();renderReports();renderUnitMap();toast('Referências aplicadas ao mês '+periodLabel(selectedPeriod)+'.')}
-function fillReferencesFromPreviousMonth(){if(isClosed()){toast('O mês está fechado. Reabra o mês para alterar referências.');return}const refPeriod=referencePeriod();state.references=state.references||{};state.references[selectedPeriod]=state.references[selectedPeriod]||{};const refs=state.references[selectedPeriod];let count=0;state.readings.filter(r=>r.period===refPeriod).forEach(r=>{refs[r.unitId]=Number(r.current);count++});state.readings.forEach(r=>{if(r.period===selectedPeriod){const arr=state.readings.filter(x=>x.unitId===r.unitId&&x.period<selectedPeriod).sort((a,b)=>b.period.localeCompare(a.period));if(arr[0]?.current!==undefined)r.previous=Number(arr[0].current);else if(Object.prototype.hasOwnProperty.call(refs,r.unitId))r.previous=Number(refs[r.unitId]);}});saveState();renderReferences();updateDashboard();renderUnitPanel();renderUnits();renderAlerts();renderReports();renderUnitMap();toast(count?`${count} leituras do mês anterior carregadas e aplicadas.`:'Não há leituras do mês anterior para carregar.')}
+function saveReferences(){if(isClosed()){toast('O mês está fechado. Reabra o mês para alterar referências.');return}state.references=state.references||{};state.references[selectedPeriod]=state.references[selectedPeriod]||{};const refs=state.references[selectedPeriod];document.querySelectorAll('.reference-input').forEach(input=>{const id=input.dataset.unit;const raw=input.value.trim();if(raw==='')delete refs[id];else{const n=parseReading(raw);if(Number.isFinite(n)&&n>=0)refs[id]=n}});state.readings.forEach(r=>{if(r.period===selectedPeriod){const arr=state.readings.filter(x=>x.unitId===r.unitId&&x.period<selectedPeriod).sort((a,b)=>b.period.localeCompare(a.period));if(arr[0]?.current!==undefined)r.previous=Number(arr[0].current);else if(Object.prototype.hasOwnProperty.call(refs,r.unitId))r.previous=Number(refs[r.unitId]);}});saveState();renderReferences();updateDashboard();renderUnitPanel();renderUnits();renderAlerts();renderReports();toast('Referências aplicadas ao mês '+periodLabel(selectedPeriod)+'.')}
+function fillReferencesFromPreviousMonth(){if(isClosed()){toast('O mês está fechado. Reabra o mês para alterar referências.');return}const refPeriod=referencePeriod();state.references=state.references||{};state.references[selectedPeriod]=state.references[selectedPeriod]||{};const refs=state.references[selectedPeriod];let count=0;state.readings.filter(r=>r.period===refPeriod).forEach(r=>{refs[r.unitId]=Number(r.current);count++});state.readings.forEach(r=>{if(r.period===selectedPeriod){const arr=state.readings.filter(x=>x.unitId===r.unitId&&x.period<selectedPeriod).sort((a,b)=>b.period.localeCompare(a.period));if(arr[0]?.current!==undefined)r.previous=Number(arr[0].current);else if(Object.prototype.hasOwnProperty.call(refs,r.unitId))r.previous=Number(refs[r.unitId]);}});saveState();renderReferences();updateDashboard();renderUnitPanel();renderUnits();renderAlerts();renderReports();toast(count?`${count} leituras do mês anterior carregadas e aplicadas.`:'Não há leituras do mês anterior para carregar.')}
 function historyStatus(unitId,c,period){const st=consumptionStatus(unitId,c,period);return {level:st.level,label:st.label,reason:st.reason}}
 function renderHistory(){
   const q=($('historySearch').value||'').toLowerCase();
@@ -200,8 +137,8 @@ function exportCSV(){const d=reportData();const rows=[['Unidade','Leitura anteri
 function backupJSON(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(state,null,2)],{type:'application/json'}));a.download='backup-leituras-agua-'+today()+'.json';a.click();toast('Backup criado.')}
 function openReferences(){showScreen('references');renderReferences();}
 
-if($('referenceSaveBtn'))$('referenceSaveBtn').addEventListener('click',saveReferences);if($('referenceFillBtn'))$('referenceFillBtn').addEventListener('click',fillReferencesFromPreviousMonth);if($('openReferencesBtn'))$('openReferencesBtn').addEventListener('click',openReferences);if($('restore'))$('restore').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const data=JSON.parse(rd.result);if(!Array.isArray(data.readings))throw Error();state=data;saveState();updateDashboard();renderUnitPanel();renderUnits();renderAlerts();renderReports();renderUnitMap();toast('Backup restaurado.')}catch(x){toast('Arquivo de backup inválido.')}};rd.readAsText(f)});
-function clearAll(){if(confirm('Apagar TODAS as leituras e referências deste aparelho? Esta ação não pode ser desfeita.')){localStorage.removeItem(KEY);state={readings:[],references:{},closures:{}};updateDashboard();renderUnitPanel();renderUnits();renderAlerts();renderReports();renderUnitMap();toast('Dados apagados.')}}
+if($('referenceSaveBtn'))$('referenceSaveBtn').addEventListener('click',saveReferences);if($('referenceFillBtn'))$('referenceFillBtn').addEventListener('click',fillReferencesFromPreviousMonth);if($('openReferencesBtn'))$('openReferencesBtn').addEventListener('click',openReferences);if($('restore'))$('restore').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const data=JSON.parse(rd.result);if(!Array.isArray(data.readings))throw Error();state=data;saveState();updateDashboard();renderUnitPanel();renderUnits();renderAlerts();renderReports();toast('Backup restaurado.')}catch(x){toast('Arquivo de backup inválido.')}};rd.readAsText(f)});
+function clearAll(){if(confirm('Apagar TODAS as leituras e referências deste aparelho? Esta ação não pode ser desfeita.')){localStorage.removeItem(KEY);state={readings:[],references:{},closures:{}};updateDashboard();renderUnitPanel();renderUnits();renderAlerts();renderReports();toast('Dados apagados.')}}
 let selectedExportFormat='pdf';
 function selectExportFormat(format){selectedExportFormat=format;document.querySelectorAll('.export-format').forEach(b=>b.classList.toggle('selected',b.dataset.format===format));const btn=document.querySelector('.export-main-btn');if(btn)btn.textContent=format==='csv'?'⬇️ Exportar relatório em CSV':'⬇️ Exportar relatório em PDF'}
 function exportReport(){if(selectedExportFormat==='csv'){exportCSV();return}printReport()}
@@ -228,5 +165,5 @@ document.addEventListener('click',e=>{
 });
 
 function toast(t){const el=$('toast');el.textContent=t;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2300)}
-$('periodPicker').value=selectedPeriod;$('period').textContent=periodLabel(selectedPeriod);renderReferences();updateDashboard();renderUnitPanel();renderUnits();renderAlerts();renderReports();renderUnitMap();
+$('periodPicker').value=selectedPeriod;$('period').textContent=periodLabel(selectedPeriod);renderReferences();updateDashboard();renderUnitPanel();renderUnits();renderAlerts();renderReports();
 if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
