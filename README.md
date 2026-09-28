@@ -37,3 +37,7 @@ V2.29.10: removido o Mapa das Unidades e sua navegação; fluxo principal perman
 - Restaurada a função de navegação das unidades que havia ficado ausente na atualização anterior.
 - Navegação inferior com 5 ícones: Início, Leituras, Relatórios, Alertas e Histórico.
 - Cache do PWA atualizado para forçar a nova versão.
+
+
+## V2.29.11
+Navegação inferior com ícones maiores, maior contraste e destaque mais claro do item ativo, preservando a escala geral do aplicativo.
