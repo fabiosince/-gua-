@@ -138,3 +138,24 @@ html,body{max-width:100%;overflow-x:hidden}
 .bottom-nav button.active .nav-icon svg{filter:drop-shadow(0 1px 1px rgba(0,0,0,.12));transform:scale(1.05)}
 .bottom-nav button:active{transform:scale(.96)!important}.bottom-nav button:active .nav-icon{transform:translateY(-1px) scale(.97)!important}
 @media(max-width:520px){.bottom-nav{padding-left:4px!important;padding-right:4px!important}.bottom-nav button{min-height:70px!important}.bottom-nav .nav-icon{width:48px!important;height:41px!important;border-radius:15px!important}.bottom-nav .nav-icon svg{width:30px!important;height:30px!important}.bottom-nav button span:not(.nav-icon){font-size:10.5px!important}}
+
+/* V2.29.14 — correção explícita das cores dos ícones SVG inferiores */
+.bottom-nav .nav-icon svg,
+.bottom-nav .nav-icon svg *{color:inherit!important}
+.bottom-nav button:nth-child(1) .nav-icon,
+.bottom-nav button:nth-child(1) .nav-icon svg{color:#1767a8!important}
+.bottom-nav button:nth-child(2) .nav-icon,
+.bottom-nav button:nth-child(2) .nav-icon svg{color:#087f91!important}
+.bottom-nav button:nth-child(3) .nav-icon,
+.bottom-nav button:nth-child(3) .nav-icon svg{color:#6b5bb5!important}
+.bottom-nav button:nth-child(4) .nav-icon,
+.bottom-nav button:nth-child(4) .nav-icon svg{color:#c47b00!important}
+.bottom-nav button:nth-child(5) .nav-icon,
+.bottom-nav button:nth-child(5) .nav-icon svg{color:#17834f!important}
+.bottom-nav .nav-icon svg{fill:none!important;stroke:currentColor!important}
+.bottom-nav .nav-icon svg .nav-fill{fill:currentColor!important;stroke:none!important;opacity:.22!important}
+.bottom-nav .nav-icon svg circle[fill="currentColor"]{fill:currentColor!important}
+.bottom-nav button.active .nav-icon,
+.bottom-nav button.active .nav-icon svg,
+.bottom-nav button.active .nav-icon svg *{color:#fff!important}
+.bottom-nav button.active .nav-icon svg .nav-fill{fill:#fff!important;opacity:.22!important}
