@@ -37,9 +37,9 @@
   <div class="panel">
     <div class="panel-title section-icon-title"><span class="title-icon">📊</span><span>Resumo do consumo</span></div>
     <div class="summary">
-      <div><span>Unidades</span><strong id="resTotal">0,00 m³</strong></div>
-      <div><span>Principal</span><strong id="mainTotal">0,00 m³</strong></div>
-      <div><span>Diferença</span><strong id="diffTotal">0,00 m³</strong></div>
+      <div><span>Unidades</span><strong id="resTotal">0,000 m³</strong></div>
+      <div><span>Principal</span><strong id="mainTotal">0,000 m³</strong></div>
+      <div><span>Diferença</span><strong id="diffTotal">0,000 m³</strong></div>
     </div>
   </div>
   <div class="panel unit-panel">
@@ -136,7 +136,7 @@
   <div class="panel report-cover">
     <div class="eyebrow">RELATÓRIO MENSAL</div><h2>Leituras e consumo</h2><p class="muted">Período: <span id="reportPeriod"></span> • <strong id="reportClosureStatus">ABERTO</strong></p>
     <div id="closureMessage" class="closure-message"></div>
-    <div class="report-grid"><div>Leituras <b id="rDone">0/81</b></div><div>Consumo residencial <b id="rRes">0,00 m³</b></div><div>Alertas de consumo <b id="rAlerts">0</b></div><div>Alertas críticos <b id="rCritical">0</b></div></div>
+    <div class="report-grid"><div>Leituras <b id="rDone">0/81</b></div><div>Consumo residencial <b id="rRes">0,000 m³</b></div><div>Alertas de consumo <b id="rAlerts">0</b></div><div>Alertas críticos <b id="rCritical">0</b></div></div>
   </div>
   <div class="panel"><h3>Critério de consumo</h3><p class="muted">O consumo mensal é calculado pela diferença entre a leitura atual e a leitura anterior. Os alertas abaixo são objetivos e independem da média histórica.</p><div class="risk-table-wrap"><table class="risk-table"><thead><tr><th>Consumo no mês</th><th>Classificação</th><th>Ação</th></tr></thead><tbody><tr><td><strong>Até 25 m³</strong></td><td><span class="status ok">🟢 NORMAL</span></td><td>Sem alerta de consumo excessivo.</td></tr><tr><td><strong>Acima de 25 m³ até 50 m³</strong></td><td><span class="status warning">🟡 ALERTA MÉDIO</span></td><td>Recomenda-se verificar a unidade.</td></tr><tr><td><strong>Acima de 50 m³</strong></td><td><span class="status alert">🔴 ALERTA CRÍTICO</span></td><td>Verificação prioritária para possível consumo excessivo ou vazamento.</td></tr></tbody></table></div><div id="reportWarning"></div><div id="reportTable" class="monthly-table-wrap"></div></div>
   <div class="panel actions">
@@ -171,12 +171,12 @@
     <div class="modal-head"><div><div class="eyebrow" id="modalType">💧 LEITURA</div><h2 id="modalTitle"></h2><div id="modalProgress" class="modal-progress"></div></div><button class="icon-btn" onclick="closeModal()">✕</button></div>
     <div class="form-grid">
       <label>Data<input id="readDate" type="date"></label>
-      <label>Leitura anterior (m³)<input id="prev" type="number" step="0.01" min="0" inputmode="decimal" readonly><small id="prevHelp" class="muted">A leitura anterior é obtida automaticamente do mês anterior.</small></label>
-      <label class="current-reading-field full">Leitura atual (m³)<input id="current" type="number" step="0.01" min="0" inputmode="decimal" autocomplete="off" placeholder="0,00"><div class="quick-values"><button type="button" onclick="adjustCurrent(-1)">−1</button><button type="button" onclick="adjustCurrent(-0.1)">−0,1</button><button type="button" onclick="adjustCurrent(0.1)">+0,1</button><button type="button" onclick="adjustCurrent(1)">+1</button></div></label>
+      <label>Leitura anterior (m³)<input id="prev" type="text" inputmode="decimal" readonly><small id="prevHelp" class="muted">A leitura anterior é obtida automaticamente do mês anterior.</small></label>
+      <label class="current-reading-field full">Leitura atual (m³)<input id="current" type="text" inputmode="decimal" autocomplete="off" placeholder="0,000"><div class="quick-values"><button type="button" onclick="adjustCurrent(-1)">−1</button><button type="button" onclick="adjustCurrent(-0.001)">−0,001</button><button type="button" onclick="adjustCurrent(0.001)">+0,001</button><button type="button" onclick="adjustCurrent(1)">+1</button></div></label>
       <label>Nº do hidrômetro<input id="meter" type="text" placeholder="Ex.: H-011"></label>
       <label class="full">Observações<textarea id="notes" rows="3" placeholder="Opcional"></textarea></label>
     </div>
-    <div class="calc" id="calc">Consumo: 0,00 m³</div>
+    <div class="calc" id="calc">Consumo: 0,000 m³</div>
     <div id="modalRisk" class="reading-risk ok"><b>🟢 Pronto para registrar</b><small>Confira a leitura anterior e informe a leitura atual.</small></div>
     <div class="modal-actions reading-actions">
       <button id="saveReadingBtn" class="primary" onclick="saveReading()">💾 Salvar leitura</button>
