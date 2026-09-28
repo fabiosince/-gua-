@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0b5b3a">
 <link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="styles.css">
-<title>Tangará Residencial • Controle de Água V2.29.10</title>
+<title>Tangará Residencial • Controle de Água V2.29.12</title>
 </head>
 <body>
 <header class="topbar brand-topbar">
@@ -147,12 +147,22 @@
 </section>
 </main>
 
-<nav class="bottom-nav">
-<button data-screen="dashboard" class="active" type="button" onclick="showScreen('dashboard')"><span class="nav-icon nav-home">⌂</span><span>Início</span></button>
-<button data-screen="readings" type="button" onclick="showScreen('readings')"><span class="nav-icon nav-water">◉</span><span>Leituras</span></button>
-<button data-screen="reports" type="button" onclick="showScreen('reports')"><span class="nav-icon nav-report">▥</span><span>Relatórios</span></button>
-<button data-screen="alerts" type="button" onclick="showScreen('alerts')"><span class="nav-icon nav-alert">!</span><span>Alertas</span></button>
-<button data-screen="history" type="button" onclick="showScreen('history')"><span class="nav-icon nav-history">▤</span><span>Histórico</span></button>
+<nav class="bottom-nav" aria-label="Navegação principal">
+<button data-screen="dashboard" class="active" type="button" onclick="showScreen('dashboard')" aria-label="Início">
+  <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M3.5 10.5 12 3l8.5 7.5v9a1 1 0 0 1-1 1h-5v-6h-5v6h-5a1 1 0 0 1-1-1z"/></svg></span><span>Início</span>
+</button>
+<button data-screen="readings" type="button" onclick="showScreen('readings')" aria-label="Leituras">
+  <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M12 2.8s-6 7.2-6 11.2a6 6 0 0 0 12 0c0-4-6-11.2-6-11.2Z"/><path d="M9.2 15.1c.3 1.6 1.4 2.6 3.1 2.9"/></svg></span><span>Leituras</span>
+</button>
+<button data-screen="reports" type="button" onclick="showScreen('reports')" aria-label="Relatórios">
+  <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 20V10"/><path d="M12 20V4"/><path d="M19 20v-7"/><path d="M3 20.5h18"/></svg></span><span>Relatórios</span>
+</button>
+<button data-screen="alerts" type="button" onclick="showScreen('alerts')" aria-label="Alertas">
+  <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="m12 3 9 17H3L12 3Z"/><path d="M12 9v5"/><path d="M12 17.5h.01"/></svg></span><span>Alertas</span>
+</button>
+<button data-screen="history" type="button" onclick="showScreen('history')" aria-label="Histórico">
+  <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3.5 2"/><path d="M4.5 6.5 3 5"/></svg></span><span>Histórico</span>
+</button>
 </nav>
 
 <div id="modal" class="modal">

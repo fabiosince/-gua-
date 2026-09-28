@@ -106,3 +106,13 @@ html,body{max-width:100%;overflow-x:hidden}
 .bottom-nav button:not(.active):active{background:#f5f8fb}
 .bottom-nav button:focus-visible{outline:3px solid rgba(11,92,171,.25);outline-offset:-3px}
 @media(max-width:520px){.bottom-nav{padding-top:3px}.bottom-nav button{min-height:64px!important}.bottom-nav button .nav-icon{width:40px!important;height:35px!important;font-size:29px!important}.bottom-nav button span:not(.nav-icon){font-size:10.5px!important}}
+
+
+/* V2.29.12 — ícones vetoriais reais na navegação inferior */
+.bottom-nav .nav-icon{display:grid!important;place-items:center;width:40px!important;height:36px!important;margin:0 auto 1px!important;padding:0!important;border-radius:10px!important;font-size:0!important;line-height:0!important;background:transparent!important;transform:none!important;box-shadow:none!important}
+.bottom-nav .nav-icon svg{display:block;width:27px;height:27px;fill:none;stroke:currentColor;stroke-width:2.15;stroke-linecap:round;stroke-linejoin:round}
+.bottom-nav button{color:#536477!important}
+.bottom-nav button.active{color:#075aa8!important;background:#f3f8fc!important}
+.bottom-nav button.active .nav-icon{background:#dceefb!important;color:#075aa8!important;box-shadow:0 1px 4px rgba(11,92,171,.12)!important}
+.bottom-nav button span:not(.nav-icon){font-size:10.5px!important;line-height:1.05!important;font-weight:900!important;color:inherit!important}
+@media(max-width:520px){.bottom-nav .nav-icon{width:42px!important;height:37px!important}.bottom-nav .nav-icon svg{width:29px;height:29px}.bottom-nav button span:not(.nav-icon){font-size:10.5px!important}}
