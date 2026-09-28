@@ -1,6 +1,6 @@
 const UNIT_NUMBERS=["11","12","13","14","15","16","17","18","21","22","23","24","25","26","27","28","31","32","33","34","35","36","37","38","41","42","43","44","45","46","47","48","51","52","53","54","55","56","57","58","61","62","63","64","65","66","67","68","71","72","73","74","75","76","77","78","81","82","83","84","85","86","87","88","91","92","93","94","95","96","97","98","101","102","103","104","105","106","107","108","PRINCIPAL"];
 const KEY='agua_condominio_v2_data';
-const APP_VERSION='V2.26';
+const APP_VERSION='V2.27';
 const $=id=>document.getElementById(id);
 const monthKey=(d=new Date())=>{const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0');return `${y}-${m}`};
 let state=loadState(),selected=null,photoData=null,selectedPeriod=monthKey();
@@ -83,8 +83,46 @@ function updateModalRisk(){const box=$('modalRisk');if(!box||!selected)return;co
 if($('current'))$('current').addEventListener('input',()=>{updateCalc();updateModalRisk()});
 if($('current'))$('current').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();saveReading()}});
 document.addEventListener('keydown',e=>{if(!$('modal')?.classList.contains('show'))return;if(e.key==='Escape')closeModal()});if($('prev'))$('prev').addEventListener('input',()=>{updateCalc();updateModalRisk()});
-if($('photo'))$('photo').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const reader=new FileReader();reader.onload=()=>{photoData=reader.result;$('photoPreview').innerHTML=`<img src="${photoData}" alt="Foto do hidrômetro">`};reader.readAsDataURL(f)});
-$('ocrBtn').onclick=async()=>{if(!photoData)return toast('Tire ou selecione uma foto primeiro.');if(!window.Tesseract)return toast('OCR indisponível sem internet.');$('ocrStatus').textContent='Lendo o visor…';try{const result=await Tesseract.recognize(photoData,'eng',{logger:m=>{if(m.status==='recognizing text')$('ocrStatus').textContent='OCR '+Math.round(m.progress*100)+'%'}});const nums=(result.data.text.match(/\d+(?:[.,]\d+)?/g)||[]).sort((a,b)=>b.length-a.length);if(nums.length){$('current').value=nums[0].replace(',','.');updateCalc();$('ocrStatus').textContent='Valor sugerido. Confira visualmente antes de salvar.'}else $('ocrStatus').textContent='Não consegui identificar o visor. Informe manualmente.'}catch(e){$('ocrStatus').textContent='Não foi possível executar o OCR.'}};
+async function preparePhoto(file){
+  if(!file)return null;
+  return await new Promise(resolve=>{
+    const reader=new FileReader();
+    reader.onload=()=>{
+      const img=new Image();
+      img.onload=()=>{
+        const max=1400, scale=Math.min(1,max/Math.max(img.width,img.height));
+        const canvas=document.createElement('canvas');
+        canvas.width=Math.max(1,Math.round(img.width*scale));
+        canvas.height=Math.max(1,Math.round(img.height*scale));
+        const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,canvas.width,canvas.height);
+        resolve(canvas.toDataURL('image/jpeg',.78));
+      };
+      img.onerror=()=>resolve(reader.result);
+      img.src=reader.result;
+    };
+    reader.onerror=()=>resolve(null);
+    reader.readAsDataURL(file);
+  });
+}
+if($('photo'))$('photo').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;photoData=await preparePhoto(f);$('photoPreview').innerHTML=photoData?`<img src="${photoData}" alt="Foto do hidrômetro"><div class="photo-caption">📷 Foto registrada • pronta para conferência</div>`:'';$('ocrStatus').textContent=photoData?'Foto pronta. Você pode tentar identificar a leitura pelo botão abaixo.':'';});
+$('ocrBtn').onclick=async()=>{
+  if(!photoData)return toast('Tire ou selecione uma foto primeiro.');
+  if(!window.Tesseract)return toast('Leitura automática indisponível sem internet. Informe manualmente.');
+  $('ocrStatus').textContent='🔎 Preparando leitura do visor…';
+  try{
+    const result=await Tesseract.recognize(photoData,'eng',{logger:m=>{if(m.status==='recognizing text')$('ocrStatus').textContent='🔎 OCR '+Math.round(m.progress*100)+'%'}});
+    const raw=(result.data.text||'').replace(/O/gi,'0').replace(/[|lI]/g,'1');
+    const nums=(raw.match(/\d+(?:[.,]\d+)?/g)||[]).map(v=>v.replace(',','.')).filter(v=>Number.isFinite(Number(v))&&Number(v)>=0).sort((a,b)=>b.length-a.length);
+    if(nums.length){
+      const candidate=nums[0];
+      $('current').value=candidate;
+      updateCalc();
+      updateModalRisk();
+      $('ocrStatus').innerHTML=`<b>💡 Sugestão: ${fmt(candidate)} m³</b> • confira o visor antes de salvar.`;
+      $('current').focus();$('current').select();
+    }else $('ocrStatus').textContent='Não consegui identificar a leitura. Confira a foto e informe manualmente.';
+  }catch(e){$('ocrStatus').textContent='Não foi possível executar a leitura automática. Informe manualmente.';}
+};
 function updateSaveButton(){const b=$('saveReadingBtn'),skip=$('skipGuidedBtn');if(!b)return;b.innerHTML=guidedMode?'💾 Salvar e próxima →':'💾 Salvar leitura';b.classList.toggle('guided-save',guidedMode);if(skip)skip.style.display=guidedMode?'block':'none'}
 function skipGuidedUnit(){if(!guidedMode||!selected)return;const next=allUnits().find(u=>u.id!==selected.id&&!currentReading(u.id));closeModal();if(next){toast('Unidade pulada. Abrindo a próxima…');setTimeout(()=>openModal(next.id),180)}else{guidedMode=false;toast('Não há outra unidade pendente.')}}
 function saveReading(){if(isClosed()){if(!confirm('Este mês está fechado. Reabrir para editar esta leitura?'))return;state.closures=state.closures||{};delete state.closures[selectedPeriod];saveState();}const prev=previousReading(selected.id,selectedPeriod),cur=Number($('current').value),date=$('readDate').value||today();if(!Number.isFinite(cur)||cur<0)return toast('Informe uma leitura válida.');if(cur<prev&&!confirm('A leitura atual é menor que a anterior. Salvar mesmo assim?'))return;state.meters=state.meters||{};state.meters[selected.id]=$('meter').value.trim();const record={unitId:selected.id,period:selectedPeriod,date,previous:prev,current:cur,meter:$('meter').value.trim(),notes:$('notes').value.trim(),photo:photoData||null,savedAt:new Date().toISOString()};const i=state.readings.findIndex(r=>r.unitId===selected.id&&r.period===selectedPeriod);if(i>=0)state.readings[i]=record;else state.readings.push(record);saveState();closeModal();updateDashboard();renderUnitPanel();renderUnits();renderAlerts();renderReports();if(guidedMode){const next=allUnits().find(u=>!currentReading(u.id));if(next){toast('Leitura salva. Abrindo a próxima unidade…');setTimeout(()=>openModal(next.id),260)}else{guidedMode=false;toast('🎉 Todas as 81 leituras deste mês foram concluídas.')}}else toast('Leitura salva neste aparelho.')}
