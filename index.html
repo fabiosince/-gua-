@@ -174,15 +174,11 @@
       <label>Leitura anterior (m³)<input id="prev" type="number" step="0.01" min="0" inputmode="decimal" readonly><small id="prevHelp" class="muted">A leitura anterior é obtida automaticamente do mês anterior.</small></label>
       <label class="current-reading-field full">Leitura atual (m³)<input id="current" type="number" step="0.01" min="0" inputmode="decimal" autocomplete="off" placeholder="0,00"><div class="quick-values"><button type="button" onclick="adjustCurrent(-1)">−1</button><button type="button" onclick="adjustCurrent(-0.1)">−0,1</button><button type="button" onclick="adjustCurrent(0.1)">+0,1</button><button type="button" onclick="adjustCurrent(1)">+1</button></div></label>
       <label>Nº do hidrômetro<input id="meter" type="text" placeholder="Ex.: H-011"></label>
-      <label class="full">📷 Foto do hidrômetro<input id="photo" type="file" accept="image/*" capture="environment"><small class="muted">Fotografe o visor com boa iluminação e sem reflexos.</small></label>
       <label class="full">Observações<textarea id="notes" rows="3" placeholder="Opcional"></textarea></label>
     </div>
-    <div id="photoPreview"></div>
     <div class="calc" id="calc">Consumo: 0,00 m³</div>
     <div id="modalRisk" class="reading-risk ok"><b>🟢 Pronto para registrar</b><small>Confira a leitura anterior e informe a leitura atual.</small></div>
-    <div id="ocrStatus" class="muted"></div>
     <div class="modal-actions reading-actions">
-      <button id="ocrBtn" class="secondary">🔎 Identificar leitura pela foto</button>
       <button id="saveReadingBtn" class="primary" onclick="saveReading()">💾 Salvar leitura</button>
       <button id="skipGuidedBtn" class="secondary guided-only" type="button" onclick="skipGuidedUnit()">⏭️ Pular esta unidade</button>
     </div>
@@ -191,7 +187,6 @@
 <div id="toast" class="toast"></div>
 <div id="printReportOnly" aria-hidden="true"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
