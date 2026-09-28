@@ -74,23 +74,19 @@
 /* V2.28 — mapa visual das 81 unidades */
 .map-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}.map-stat{padding:14px;border:1px solid var(--border);border-radius:18px;background:var(--card);display:flex;flex-direction:column;align-items:center;gap:3px}.map-stat span{font-size:22px}.map-stat b{font-size:24px}.map-stat small{color:var(--muted)}.map-tools{display:flex;gap:10px;flex-direction:column}.map-filters{display:flex;gap:8px;overflow:auto;padding-bottom:3px}.unit-map-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:16px}.unit-map-card{border:1px solid var(--border);border-radius:16px;background:var(--card);padding:11px 7px;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:92px;cursor:pointer}.unit-map-card strong{font-size:16px}.unit-map-card small{font-weight:700}.unit-map-card em{font-size:10px;color:var(--muted);font-style:normal;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}.unit-map-card.pending{border-style:dashed}.unit-map-card.alert{box-shadow:0 0 0 2px rgba(220,60,60,.08)}.unit-map-icon{font-size:18px}.map-stat.alert b{color:#c62828}.map-stat.pending b{color:#a66a00}.map-stat.done b{color:#278447}@media(max-width:520px){.unit-map-grid{grid-template-columns:repeat(4,1fr);gap:7px}.unit-map-card{min-height:82px;padding:9px 4px}.unit-map-card strong{font-size:14px}.unit-map-card small{font-size:11px}.unit-map-card em{display:none}}
 
-/* V2.29.1 — Identidade Tangará sem alterar a escala da aplicação */
-html,body{width:100%;max-width:100%;overflow-x:hidden}
-.tangara-topbar{padding:10px 17px;background:#fff;border-bottom:1px solid #dfe8e3}
-.tangara-header-inner{width:100%;max-width:940px;margin:0 auto;display:flex;align-items:center;gap:10px;min-width:0}
-.tangara-mini-logo{width:64px;height:44px;object-fit:contain;object-position:center;flex:0 0 64px}
-.tangara-header-text{min-width:0}
-.tangara-header-text h1{font-size:20px;margin:2px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tangara-header-text small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tangara-header-text .eyebrow{color:#0b5b3a}
-.tangara-hero{position:relative;overflow:hidden;background:linear-gradient(135deg,#0b5b3a 0%,#08714a 54%,#1677b8 100%);isolation:isolate}
-.tangara-hero:after{content:"";position:absolute;right:-35px;bottom:-45px;width:190px;height:145px;background:url('watermark.png') center/contain no-repeat;opacity:.12;pointer-events:none;z-index:-1}
-.hero-main{position:relative;z-index:1;min-width:0}
-.tangara-slogan{display:block;margin-top:3px;font-size:12px;font-weight:700;opacity:.86}
-.brand-drop{background:#eaf6ef!important;color:#0b5b3a}
-.primary{background:#0b5b3a}
-.primary.light{color:#0b5b3a}
-.filter-chip.active{background:#0b5b3a;border-color:#0b5b3a}
-.bottom-nav button.active{color:#0b5b3a}
-.current-reading-field input{border-color:#0b5b3a!important}
-@media(max-width:420px){.tangara-topbar{padding:9px 13px}.tangara-mini-logo{width:56px;height:40px;flex-basis:56px}.tangara-header-text h1{font-size:18px}.tangara-header-text small{font-size:11px}.tangara-header-text .eyebrow{font-size:9px}.tangara-hero:after{width:150px;height:115px;right:-32px;bottom:-32px}}
+
+/* V2.29.2 — identidade Tangará sem alterar a escala do aplicativo */
+html,body{max-width:100%;overflow-x:hidden}
+.brand-topbar{background:#fff;border-bottom:1px solid #dce9e1}
+.brand-line{display:flex;align-items:center;gap:10px;min-width:0;width:100%}
+.brand-mark{width:48px;height:48px;flex:0 0 48px;border-radius:14px;overflow:hidden;background:#eef7f1;display:grid;place-items:center}
+.brand-mark img{display:block;width:100%;height:100%;object-fit:cover}
+.brand-copy{min-width:0}
+.brand-copy h1{margin:2px 0;font-size:20px;color:#142033}
+.brand-copy small{color:#718096}
+.brand-copy .eyebrow{color:#0b5b3a}
+.brand-hero{position:relative;overflow:hidden;background:linear-gradient(135deg,#0b5cab 0%,#1689c8 68%,#0b6b48 100%)}
+.hero-copy{position:relative;z-index:2}
+.hero-slogan{display:block;margin-top:4px;font-size:12px;font-weight:700;opacity:.9}
+.hero-watermark{position:absolute;right:8px;bottom:-20px;width:125px;height:86px;background:url('watermark.png') center/contain no-repeat;opacity:.09;pointer-events:none}
+@media(max-width:520px){.topbar{padding:8px 14px}.brand-mark{width:44px;height:44px;flex-basis:44px;border-radius:13px}.brand-copy h1{font-size:19px}.brand-copy small{font-size:11px}.hero-slogan{font-size:11px}.hero-watermark{width:110px;height:76px;right:2px}}
