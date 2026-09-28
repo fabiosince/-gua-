@@ -1,12 +1,12 @@
-# Tangará Residencial — Controle de Água V2.23
+# Tangará Residencial — Controle de Água V2.24
 
-V2.23 prioriza uma leitura rápida e intuitiva no celular.
+V2.24 moderniza a interface para deixar a operação mais visual, rápida e intuitiva no celular.
 
-- Campo da leitura atual em destaque
-- Botões rápidos para pequenos ajustes
-- Foco automático no campo da leitura
-- Enter salva a leitura
-- Esc fecha a tela
-- Modo guiado continua levando à próxima unidade pendente
-- Identidade Tangará Residencial
-- Mantém histórico, alertas, fechamento, backup e exportações
+- Ícones visuais e criativos nas principais ações
+- Cards com indicadores visuais para realizadas, pendentes e alertas
+- Botão principal de leitura com destaque e explicação curta
+- Ações rápidas organizadas em cartões
+- Navegação inferior com ícones e rótulos
+- Tela de leitura com campo grande, ajustes rápidos e modo guiado
+- Mantém histórico, alertas, fechamento, backup, referências e exportações
+- PWA offline e identidade Tangará Residencial

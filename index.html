@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0b5cab">
 <link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="styles.css">
-<title>Tangará Residencial • Controle de Água V2.23</title>
+<title>Tangará Residencial • Controle de Água V2.24</title>
 </head>
 <body>
 <header class="topbar">
@@ -18,21 +18,21 @@
 <section id="dashboard" class="screen active">
   <div class="hero">
     <div><span>Período de leitura</span><strong id="period"></strong></div>
-    <div class="hero-actions"><button class="primary light" onclick="startGuidedReading()">▶ Iniciar modo de leitura</button><button class="hero-next" onclick="openNextPending()">→ Próxima pendente</button></div>
+    <div class="hero-actions"><button class="primary light visual-action" onclick="startGuidedReading()"><span class="big-icon">💧</span><span><b>Iniciar leitura</b><small>Modo guiado • uma unidade por vez</small></span></button><button class="hero-next visual-action" onclick="openNextPending()"><span class="big-icon small">➜</span><span><b>Próxima pendente</b><small>Continuar de onde parou</small></span></button></div>
   </div>
   <div class="period-control panel">
     <button class="secondary" onclick="shiftPeriod(-1)">‹</button>
     <input id="periodPicker" type="month" onchange="setPeriod(this.value)">
     <button class="secondary" onclick="shiftPeriod(1)">›</button>
   </div>
-  <div class="cards">
-    <div class="card"><span>Unidades</span><b>80</b><small>residenciais</small></div>
-    <div class="card"><span>Realizadas</span><b id="done">0</b><small id="donePct">0%</small></div>
-    <div class="card"><span>Pendentes</span><b id="pending">81</b><small>incluindo principal</small></div>
-    <div class="card"><span>Alertas</span><b id="alertCount">0</b><small>para revisar</small></div>
+  <div class="cards visual-cards">
+    <div class="card visual-card"><div class="card-icon blue">🏢</div><div><span>Unidades</span><b>80</b><small>residenciais</small></div></div>
+    <div class="card visual-card"><div class="card-icon green">✓</div><div><span>Realizadas</span><b id="done">0</b><small id="donePct">0%</small></div></div>
+    <div class="card visual-card"><div class="card-icon amber">⌛</div><div><span>Pendentes</span><b id="pending">81</b><small>incluindo principal</small></div></div>
+    <div class="card visual-card"><div class="card-icon red">!</div><div><span>Alertas</span><b id="alertCount">0</b><small>para revisar</small></div></div>
   </div>
   <div class="panel">
-    <div class="panel-title">Resumo do consumo</div>
+    <div class="panel-title section-icon-title"><span class="title-icon">📊</span><span>Resumo do consumo</span></div>
     <div class="summary">
       <div><span>Unidades</span><strong id="resTotal">0,00 m³</strong></div>
       <div><span>Principal</span><strong id="mainTotal">0,00 m³</strong></div>
@@ -43,7 +43,7 @@
     <div class="quick-unit-search"><input id="dashboardUnitSearch" class="search" placeholder="🔎 Buscar unidade no painel (ex.: 24, 108 ou PRINCIPAL)" oninput="renderUnitPanel()"><button class="secondary" type="button" onclick="clearDashboardUnitSearch()">Limpar</button></div>
     <div class="panel-head-row">
       <div>
-        <div class="panel-title">Unidades • toque para registrar</div>
+        <div class="panel-title section-icon-title"><span class="title-icon">👆</span><span>Unidades • toque para registrar</span></div>
         <div class="muted">Toque em uma unidade para registrar ou editar a leitura.</div>
       </div>
       <div class="panel-progress"><b id="panelDone">0/81</b><span>feitas</span></div>
@@ -56,19 +56,19 @@
     </div>
   </div>
   <div class="panel">
-    <div class="panel-title">Ações rápidas</div>
-    <div class="actions">
-      <button class="secondary" onclick="showScreen('readings')">📋 Todas as unidades</button>
-      <button class="secondary" onclick="showScreen('history')">📚 Histórico por unidade</button>
-      <button class="secondary" onclick="showScreen('alerts')">⚠️ Ver alertas</button>
-      <button class="secondary" onclick="showScreen('reports')">📊 Fechamento e relatório</button>
-      <button id="openReferencesBtn" class="primary" type="button">🗓️ Cadastrar mês anterior</button>
+    <div class="panel-title section-icon-title"><span class="title-icon">⚡</span><span>Ações rápidas</span></div>
+    <div class="actions quick-action-grid">
+      <button class="secondary quick-action" onclick="showScreen('readings')"><span>📋</span><b>Todas as unidades</b><small>Registrar ou editar</small></button>
+      <button class="secondary quick-action" onclick="showScreen('history')"><span>📚</span><b>Histórico</b><small>Ver meses anteriores</small></button>
+      <button class="secondary quick-action" onclick="showScreen('alerts')"><span>🚨</span><b>Alertas</b><small>Itens para revisar</small></button>
+      <button class="secondary quick-action" onclick="showScreen('reports')"><span>📊</span><b>Relatório</b><small>Conferir e fechar</small></button>
+      <button id="openReferencesBtn" class="primary quick-action" type="button"><span>🗓️</span><b>Mês anterior</b><small>Cadastrar referências</small></button>
     </div>
   </div>
 </section>
 
 <section id="readings" class="screen">
-  <div class="section-head"><div><div class="eyebrow">81 MEDIDORES</div><h2>Leituras</h2></div><button class="secondary" onclick="showScreen('dashboard')">Início</button></div>
+  <div class="section-head"><div><div class="eyebrow">81 MEDIDORES</div><h2>💧 Leituras</h2></div><button class="secondary" onclick="showScreen('dashboard')">Início</button></div>
   <div class="filters">
     <input id="search" class="search" placeholder="🔎 Digite unidade ou hidrômetro" oninput="renderUnits()">
     <div class="filter-chips" role="group" aria-label="Filtrar unidades">
@@ -83,7 +83,7 @@
 </section>
 
 <section id="history" class="screen">
-  <div class="section-head"><div><div class="eyebrow">MEDIÇÕES SALVAS</div><h2>Histórico</h2></div><button class="secondary" onclick="showScreen('dashboard')">Início</button></div>
+  <div class="section-head"><div><div class="eyebrow">MEDIÇÕES SALVAS</div><h2>📚 Histórico</h2></div><button class="secondary" onclick="showScreen('dashboard')">Início</button></div>
   <div class="filters"><input id="historySearch" class="search" placeholder="🔎 Filtrar por unidade" oninput="renderHistory()"></div>
   <div class="panel history-selector-panel">
     <div class="panel-title">Histórico completo por unidade</div>
@@ -97,7 +97,7 @@
 </section>
 
 <section id="alerts" class="screen">
-  <div class="section-head"><div><div class="eyebrow">REVISÃO</div><h2>Alertas</h2></div><button class="secondary" onclick="showScreen('dashboard')">Início</button></div>
+  <div class="section-head"><div><div class="eyebrow">REVISÃO</div><h2>🚨 Alertas</h2></div><button class="secondary" onclick="showScreen('dashboard')">Início</button></div>
   <div id="alertsList"></div>
 </section>
 
@@ -116,7 +116,7 @@
 </section>
 
 <section id="reports" class="screen">
-  <div class="section-head"><div><div class="eyebrow">GESTÃO</div><h2>Relatório de leituras</h2></div><button class="secondary" onclick="showScreen('dashboard')">Início</button></div>
+  <div class="section-head"><div><div class="eyebrow">GESTÃO</div><h2>📊 Relatório de leituras</h2></div><button class="secondary" onclick="showScreen('dashboard')">Início</button></div>
   <div class="panel report-cover">
     <div class="eyebrow">RELATÓRIO MENSAL</div><h2>Leituras e consumo</h2><p class="muted">Período: <span id="reportPeriod"></span> • <strong id="reportClosureStatus">ABERTO</strong></p>
     <div id="closureMessage" class="closure-message"></div>
@@ -143,16 +143,16 @@
 </main>
 
 <nav class="bottom-nav">
-<button data-screen="dashboard" class="active" onclick="showScreen('dashboard')">⌂<span>Início</span></button>
-<button data-screen="readings" onclick="showScreen('readings')">▣<span>Leituras</span></button>
-<button data-screen="history" onclick="showScreen('history')">◷<span>Histórico</span></button>
-<button data-screen="reports" onclick="showScreen('reports')">▤<span>Relatórios</span></button>
-<button data-screen="alerts" onclick="showScreen('alerts')">⚠<span>Alertas</span></button>
+<button data-screen="dashboard" class="active" onclick="showScreen('dashboard')"><span class="nav-icon">🏠</span><span>Início</span></button>
+<button data-screen="readings" onclick="showScreen('readings')"><span class="nav-icon">💧</span><span>Leituras</span></button>
+<button data-screen="history" onclick="showScreen('history')"><span class="nav-icon">📚</span><span>Histórico</span></button>
+<button data-screen="reports" onclick="showScreen('reports')"><span class="nav-icon">📊</span><span>Relatórios</span></button>
+<button data-screen="alerts" onclick="showScreen('alerts')"><span class="nav-icon">🚨</span><span>Alertas</span></button>
 </nav>
 
 <div id="modal" class="modal">
   <div class="modal-card">
-    <div class="modal-head"><div><div class="eyebrow" id="modalType"></div><h2 id="modalTitle"></h2><div id="modalProgress" class="modal-progress"></div></div><button class="icon-btn" onclick="closeModal()">✕</button></div>
+    <div class="modal-head"><div><div class="eyebrow" id="modalType">💧 LEITURA</div><h2 id="modalTitle"></h2><div id="modalProgress" class="modal-progress"></div></div><button class="icon-btn" onclick="closeModal()">✕</button></div>
     <div class="form-grid">
       <label>Data<input id="readDate" type="date"></label>
       <label>Leitura anterior (m³)<input id="prev" type="number" step="0.01" min="0" inputmode="decimal" readonly><small id="prevHelp" class="muted">A leitura anterior é obtida automaticamente do mês anterior.</small></label>
