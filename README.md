@@ -1,6 +1,6 @@
-# Tangará Residencial — Controle de Água V2.27.1
+# Tangará Residencial — Controle de Água V2.28
 
-V2.27.1 moderniza a interface para deixar a operação mais visual, rápida e intuitiva no celular.
+V2.28 moderniza a interface para deixar a operação mais visual, rápida e intuitiva no celular.
 
 - Ícones visuais e criativos nas principais ações
 - Cards com indicadores visuais para realizadas, pendentes e alertas
@@ -12,4 +12,4 @@ V2.27.1 moderniza a interface para deixar a operação mais visual, rápida e in
 - PWA offline e identidade Tangará Residencial
 
 
-V2.27.1 — Foto + OCR assistivo: captura/compressão de foto, identificação sugerida da leitura e conferência obrigatória antes de salvar.
+V2.28 — Foto + OCR assistivo: captura/compressão de foto, identificação sugerida da leitura e conferência obrigatória antes de salvar.

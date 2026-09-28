@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0b5cab">
 <link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="styles.css">
-<title>Tangará Residencial • Controle de Água V2.27</title>
+<title>Tangará Residencial • Controle de Água V2.28</title>
 </head>
 <body>
 <header class="topbar">
@@ -61,8 +61,21 @@
       <button class="secondary quick-action" onclick="showScreen('history')"><span>📚</span><b>Histórico</b><small>Ver meses anteriores</small></button>
       <button class="secondary quick-action" onclick="showScreen('alerts')"><span>🚨</span><b>Alertas</b><small>Itens para revisar</small></button>
       <button class="secondary quick-action" onclick="showScreen('reports')"><span>📊</span><b>Relatório</b><small>Conferir e fechar</small></button>
-      <button id="openReferencesBtn" class="primary quick-action" type="button"><span>🗓️</span><b>Mês anterior</b><small>Cadastrar referências</small></button>
+      <button class="secondary quick-action" onclick="showScreen('map')"><span>🗺️</span><b>Mapa das unidades</b><small>Visão das 81 unidades</small></button><button id="openReferencesBtn" class="primary quick-action" type="button"><span>🗓️</span><b>Mês anterior</b><small>Cadastrar referências</small></button>
     </div>
+  </div>
+</section>
+
+<section id="map" class="screen">
+  <div class="section-head"><div><div class="eyebrow">VISÃO GERAL</div><h2>🗺️ Mapa das unidades</h2><small class="muted">Acompanhe as 81 leituras de um só olhar.</small></div><button class="secondary" onclick="showScreen('dashboard')">Início</button></div>
+  <div class="map-summary">
+    <div class="map-stat done"><span>🟢</span><b id="mapDone">0</b><small>Concluídas</small></div>
+    <div class="map-stat pending"><span>🟡</span><b id="mapPending">81</b><small>Pendentes</small></div>
+    <div class="map-stat alert"><span>🔴</span><b id="mapAlert">0</b><small>Revisar</small></div>
+  </div>
+  <div class="panel">
+    <div class="map-tools"><input id="mapSearch" class="search" placeholder="🔎 Buscar unidade ou hidrômetro" oninput="renderUnitMap()"><div class="map-filters"><button class="filter-chip active" data-map-filter="all" onclick="setMapFilter('all')">Todas</button><button class="filter-chip" data-map-filter="pending" onclick="setMapFilter('pending')">Pendentes</button><button class="filter-chip" data-map-filter="done" onclick="setMapFilter('done')">Concluídas</button><button class="filter-chip" data-map-filter="alert" onclick="setMapFilter('alert')">🚨 Revisar</button></div></div>
+    <div id="unitMap" class="unit-map-grid"></div>
   </div>
 </section>
 
@@ -144,7 +157,7 @@
 <nav class="bottom-nav">
 <button data-screen="dashboard" class="active" onclick="showScreen('dashboard')"><span class="nav-icon">🏠</span><span>Início</span></button>
 <button data-screen="readings" onclick="showScreen('readings')"><span class="nav-icon">💧</span><span>Leituras</span></button>
-<button data-screen="history" onclick="showScreen('history')"><span class="nav-icon">📚</span><span>Histórico</span></button>
+<button data-screen="map" onclick="showScreen('map')"><span class="nav-icon">🗺️</span><span>Mapa</span></button>
 <button data-screen="reports" onclick="showScreen('reports')"><span class="nav-icon">📊</span><span>Relatórios</span></button>
 <button data-screen="alerts" onclick="showScreen('alerts')"><span class="nav-icon">🚨</span><span>Alertas</span></button>
 </nav>
