@@ -6,21 +6,20 @@
 <meta name="theme-color" content="#0b5b3a">
 <link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="styles.css">
-<title>Tangará Residencial • Controle de Água V2.29</title>
+<title>Tangará Residencial • Controle de Água V2.29.1</title>
 </head>
 <body>
-<header class="topbar brand-topbar">
-  <div class="brand-identity">
-    <img class="brand-logo-img" src="brand-logo.png" alt="Tangará Residencial — Viver bem é aqui">
-    <div class="brand-app-title"><div class="eyebrow">GESTÃO CONDOMINIAL</div><h1>Controle de Água</h1><small>Leituras • Consumo • Conferência</small></div>
+<header class="topbar tangara-topbar">
+  <div class="tangara-header-inner">
+    <img class="tangara-mini-logo" src="brand-logo.png" alt="Tangará Residencial">
+    <div class="tangara-header-text"><div class="eyebrow">TANGARÁ RESIDENCIAL</div><h1>Controle de Água</h1><small>Leituras • Consumo • Conferência</small></div>
   </div>
 </header>
 
 <main>
 <section id="dashboard" class="screen active">
-  <div class="hero brand-hero">
-    <div class="hero-brand-watermark"></div>
-    <div class="hero-copy"><span>Período de leitura</span><strong id="period"></strong><small class="hero-slogan">Viver bem é aqui</small></div>
+  <div class="hero tangara-hero">
+    <div class="hero-main"><span>Período de leitura</span><strong id="period"></strong><small class="tangara-slogan">Viver bem é aqui</small></div>
     <div class="hero-actions"><button class="primary light visual-action" onclick="startGuidedReading()"><span class="big-icon">💧</span><span><b>Iniciar leitura</b><small>Modo guiado • uma unidade por vez</small></span></button><button class="hero-next visual-action" onclick="openNextPending()"><span class="big-icon small">➜</span><span><b>Próxima pendente</b><small>Continuar de onde parou</small></span></button></div>
   </div>
   <div class="period-control panel">

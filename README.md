@@ -1,13 +1,18 @@
-# Tangará Residencial — Controle de Água
+# Tangará Residencial — Controle de Água V2.29.1
 
-## V2.29 — Identidade visual
-- Marca Tangará Residencial integrada ao cabeçalho e à experiência do aplicativo.
-- Novo ícone PWA em PNG com a identidade do condomínio.
-- Imagem do edifício usada de forma discreta no destaque da tela inicial.
-- Marca d’água Tangará aplicada somente à cópia armazenada das fotos dos hidrômetros.
-- A imagem usada pelo OCR permanece sem marca d’água para preservar a leitura dos dígitos.
-- Fotos continuam otimizadas para reduzir armazenamento.
-- Mantidas leituras, histórico, mapa, alertas, fechamento e exportações.
+V2.29.1 moderniza a interface para deixar a operação mais visual, rápida e intuitiva no celular.
 
-## Publicação
-Substitua todos os arquivos do GitHub Pages pelo conteúdo deste pacote.
+- Ícones visuais e criativos nas principais ações
+- Cards com indicadores visuais para realizadas, pendentes e alertas
+- Botão principal de leitura com destaque e explicação curta
+- Ações rápidas organizadas em cartões
+- Navegação inferior com ícones e rótulos
+- Tela de leitura com campo grande, ajustes rápidos e modo guiado
+- Mantém histórico, alertas, fechamento, backup, referências e exportações
+- PWA offline e identidade Tangará Residencial
+
+
+V2.29.1 — Foto + OCR assistivo: captura/compressão de foto, identificação sugerida da leitura e conferência obrigatória antes de salvar.
+
+
+V2.29.1 — Identidade visual refinada, mantendo as dimensões e o comportamento responsivo da V2.28.
