@@ -1,6 +1,6 @@
 const UNIT_NUMBERS=["11","12","13","14","15","16","17","18","21","22","23","24","25","26","27","28","31","32","33","34","35","36","37","38","41","42","43","44","45","46","47","48","51","52","53","54","55","56","57","58","61","62","63","64","65","66","67","68","71","72","73","74","75","76","77","78","81","82","83","84","85","86","87","88","91","92","93","94","95","96","97","98","101","102","103","104","105","106","107","108","PRINCIPAL"];
 const KEY='agua_condominio_v2_data';
-const APP_VERSION='V2.27';
+const APP_VERSION='V2.27.1';
 const $=id=>document.getElementById(id);
 const monthKey=(d=new Date())=>{const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0');return `${y}-${m}`};
 let state=loadState(),selected=null,photoData=null,selectedPeriod=monthKey();
@@ -90,12 +90,17 @@ async function preparePhoto(file){
     reader.onload=()=>{
       const img=new Image();
       img.onload=()=>{
-        const max=1400, scale=Math.min(1,max/Math.max(img.width,img.height));
+        // Guarda somente uma versão otimizada: suficiente para o OCR do visor,
+        // sem ocupar o espaço da foto original da câmera.
+        const max=1200, scale=Math.min(1,max/Math.max(img.width,img.height));
         const canvas=document.createElement('canvas');
         canvas.width=Math.max(1,Math.round(img.width*scale));
         canvas.height=Math.max(1,Math.round(img.height*scale));
-        const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,canvas.width,canvas.height);
-        resolve(canvas.toDataURL('image/jpeg',.78));
+        const ctx=canvas.getContext('2d',{alpha:false});
+        ctx.imageSmoothingEnabled=true;
+        ctx.imageSmoothingQuality='high';
+        ctx.drawImage(img,0,0,canvas.width,canvas.height);
+        resolve(canvas.toDataURL('image/jpeg',.72));
       };
       img.onerror=()=>resolve(reader.result);
       img.src=reader.result;
