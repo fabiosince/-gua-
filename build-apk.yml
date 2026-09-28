@@ -1,0 +1,49 @@
+name: Build Android APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Bubblewrap
+        run: npm install -g @bubblewrap/cli
+
+      - name: Prepare signing key
+        env:
+          STORE_PASS: ${{ secrets.BUBBLEWRAP_KEYSTORE_PASSWORD }}
+          KEY_PASS: ${{ secrets.BUBBLEWRAP_KEY_PASSWORD }}
+        run: |
+          test -n "$STORE_PASS"
+          test -n "$KEY_PASS"
+          keytool -genkeypair -v -keystore android-keystore.jks -storepass "$STORE_PASS" -keypass "$KEY_PASS" -alias tangara -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Tangará Residencial, OU=Condomínio, O=Tangará Residencial, L=São Paulo, ST=SP, C=BR"
+
+      - name: Build signed APK
+        env:
+          BUBBLEWRAP_KEYSTORE_PASSWORD: ${{ secrets.BUBBLEWRAP_KEYSTORE_PASSWORD }}
+          BUBBLEWRAP_KEY_PASSWORD: ${{ secrets.BUBBLEWRAP_KEY_PASSWORD }}
+        run: |
+          bubblewrap build --manifest=twa-manifest.json
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: tangara-agua-android
+          path: |
+            app-release-signed.apk
+            app-release-bundle.aab
